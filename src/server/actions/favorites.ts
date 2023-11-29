@@ -104,20 +104,16 @@ export const checkIfFavorited = async (toolId: string) => {
 
         if (!session) return;
 
-        const id = session.user.id;
+        const userId = session.user.id;
 
-        const user = await db.user.findUnique({
+        const favAiTool = await db.userFavoriteAiTool.findUnique({
             where: {
-                id,
-            },
-            include: {
-                FavoritedAiTools: true,
+                userId_aiToolId: {
+                    aiToolId: toolId,
+                    userId,
+                },
             },
         });
-
-        const favAiTool = user?.FavoritedAiTools.find(
-            (tool) => tool.aiToolId === toolId,
-        );
 
         return !!favAiTool;
     } catch (error) {

@@ -15,7 +15,9 @@ const useInitialToolsFetcher = () => {
     } = useAiToolStore((state) => state);
 
     const handleGetInitialTools = useCallback(() => {
-        if (!initiallyLoaded) setLoadingTools(true);
+        if (initiallyLoaded) return;
+
+        // setLoadingTools(true);
 
         getInitialTools()
             .then((res) => {
@@ -30,7 +32,7 @@ const useInitialToolsFetcher = () => {
                 toast.error(error?.message, { style: darkModeStyle });
             })
             .finally(() => {
-                if (!initiallyLoaded) setLoadingTools(false);
+                setLoadingTools(false);
             });
     }, [
         initiallyLoaded,

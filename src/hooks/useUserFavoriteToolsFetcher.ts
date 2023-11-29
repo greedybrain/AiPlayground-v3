@@ -19,8 +19,9 @@ const useUserFavoriteToolsFetcher = () => {
     } = useFavoritesStore((state) => state);
 
     const handleGetUserFavoriteTools = useCallback(() => {
-        if (!favoritesInitiallyLoaded && pathname.startsWith("/user/favorites"))
-            setLoadingFavorites(true);
+        if (favoritesInitiallyLoaded) return;
+
+        setLoadingFavorites(true);
 
         getUserFavoriteTools()
             .then((res) => {
@@ -36,11 +37,10 @@ const useUserFavoriteToolsFetcher = () => {
                 toast.error(error?.message, { style: darkModeStyle });
             })
             .finally(() => {
-                if (!favoritesInitiallyLoaded) setLoadingFavorites(false);
+                setLoadingFavorites(false);
             });
     }, [
         favoritesInitiallyLoaded,
-        pathname,
         setFavoritesCursor,
         setFavoritesDictionary,
         setFavoritesInitiallyLoaded,
