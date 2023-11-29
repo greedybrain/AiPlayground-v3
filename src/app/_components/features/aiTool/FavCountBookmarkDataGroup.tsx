@@ -40,7 +40,7 @@ const FavCountAndBookmarkData = ({
             id="BookmarkData"
             className={cn("flex", "gap-2", "items-center")}
         >
-            <FavCount count={favCount} />
+            {favCount > 0 && <FavCount count={favCount} />}
             <BookmarkHandler
                 tool={tool}
                 setFavCount={setFavCount}

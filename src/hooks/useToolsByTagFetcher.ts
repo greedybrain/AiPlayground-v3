@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useParams, usePathname } from "next/navigation";
 
+import { capitalizeWordsWithSeparators } from "@/lib/helpers";
 import { darkModeStyle } from "@/utils/darkModeToast";
 import { getToolsByTag } from "@/server/actions/aitools";
 import toast from "react-hot-toast";
@@ -20,13 +21,11 @@ const useToolsByTagFetcher = () => {
 
     const handleGetToolsByTag = useCallback(() => {
         const tagAsString = tag as string;
-        if (!pathname.startsWith("/ai_tools/tags") && !tagAsString) return;
+        if (pathname.startsWith("/ai_tools/tags") && !tagAsString) return;
 
         setLoadingToolsByTag(true);
 
-        console.log("LOADING TOOLS BY TAG");
-
-        const sanitizedTag = tagAsString?.replaceAll("%20", " ");
+        const sanitizedTag = capitalizeWordsWithSeparators(tagAsString);
 
         getToolsByTag(sanitizedTag)
             .then((res) => {
@@ -45,13 +44,13 @@ const useToolsByTagFetcher = () => {
                 setLoadingToolsByTag(false);
             });
     }, [
-        tag,
         pathname,
         setAiToolsByTagDictionary,
         setLoadingToolsByTag,
         setToolsByTagCursor,
         setToolsByTagInitiallyLoaded,
         setTotalToolsByTagCount,
+        tag,
     ]);
 
     useEffect(() => {

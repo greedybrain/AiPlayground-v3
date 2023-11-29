@@ -1,5 +1,7 @@
 import type { AiToolWithRelations } from "@/types";
+import Link from "next/link";
 import React from "react";
+import { capitalizeWordsWithSeparators } from "@/lib/helpers";
 import cn from "@/utils/twMerge";
 
 const Tag = (tag: AiToolWithRelations["Tags"][0]) => {
@@ -17,7 +19,13 @@ const Tag = (tag: AiToolWithRelations["Tags"][0]) => {
                 "text-secondary text-sm truncate",
             )}
         >
-            {tag.tagName}
+            <Link
+                href={`/ai_tools/tags/${capitalizeWordsWithSeparators(
+                    tag.tagName,
+                )}`}
+            >
+                {tag.tagName}
+            </Link>
         </li>
     );
 };

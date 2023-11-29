@@ -30,8 +30,6 @@ const useToolsSortAndFilter = () => {
     const handleGetToolsBySortAndFilter = useCallback(() => {
         setLoadingSortAndFilteredTools(true);
 
-        console.log("LOADING TOOLS BY SORT AND FILTER");
-
         getToolsBySortAndFilter(paramsRecord)
             .then((res) => {
                 if (res.success) {
@@ -60,10 +58,10 @@ const useToolsSortAndFilter = () => {
     ]);
 
     useEffect(() => {
-        if (pathname.startsWith("/ai_tools")) {
+        if (pathname.startsWith("/ai_tools") && paramsRecord["price_range"]) {
             handleGetToolsBySortAndFilter();
         }
-    }, [handleGetToolsBySortAndFilter, pathname]);
+    }, [handleGetToolsBySortAndFilter, paramsRecord, pathname]);
 };
 
 export default useToolsSortAndFilter;

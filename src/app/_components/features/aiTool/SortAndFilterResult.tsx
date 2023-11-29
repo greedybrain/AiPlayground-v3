@@ -18,11 +18,12 @@ const SortAndFilterResult = () => {
     let finalCount = 0;
 
     const isAiToolsPath = pathname.startsWith("/ai_tools");
+    const isAiToolsTagsPath = pathname.startsWith("/ai_tools/tags");
     const isFavoritesPath = pathname.startsWith("/user/favorites");
 
     if (totalSortAndFilterCount > 0 && isAiToolsPath) {
         finalCount = totalSortAndFilterCount;
-    } else if (totalToolsByTagCount > 0 && isAiToolsPath && tag) {
+    } else if (totalToolsByTagCount > 0 && isAiToolsTagsPath && tag) {
         finalCount = totalToolsByTagCount;
     } else if (favoritesTotalCount > 0 && isFavoritesPath) {
         finalCount = favoritesTotalCount;
