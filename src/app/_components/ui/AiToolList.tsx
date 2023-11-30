@@ -1,46 +1,47 @@
 "use client";
 
-import { useParams, usePathname } from "next/navigation";
+import React, { useEffect, useRef } from "react";
 
 import AiTool from "../features/aiTool/AiTool";
-import { AiToolWithRelations } from "@/types";
-import LoadMoreToolsBtn from "../features/aiTool/LoadMoreToolsBtn";
 import LoadingAnimation from "../features/LoadingAnimation";
-import React from "react";
 import SortHandler from "../features/SortHandler";
 import Wrapper from "./Wrapper";
 import cn from "@/utils/twMerge";
 import useAiToolStore from "@/store/slices/aitool";
 import useFavoritesStore from "@/store/slices/favorite";
+import useLoadMoreTools from "@/hooks/useLoadMoreTools";
 
 const AiToolList = () => {
-    const pathname = usePathname();
-    const { tag } = useParams();
+    const { aiToolsArray, loadMoreItems, loadingMoreTools } =
+        useLoadMoreTools();
 
-    const { favoritesDictionary, loadingFavorites } = useFavoritesStore(
-        (state) => state,
-    );
+    const { loadingFavorites } = useFavoritesStore((state) => state);
+    const { loadingTools, loadingSortAndFilteredTools, loadingToolsByTag } =
+        useAiToolStore((state) => state);
 
-    const {
-        aiToolsDictionary,
-        aiToolsSortedAndFilteredDictionary,
-        aiToolsByTagDictionary,
-        loadingTools,
-        loadingSortAndFilteredTools,
-        loadingToolsByTag,
-    } = useAiToolStore((state) => state);
+    const listEndRef = useRef<HTMLLIElement | null>(null);
 
-    let aiToolsArray: AiToolWithRelations[];
+    useEffect(() => {
+        const copyListEndRefRef = listEndRef.current;
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting) {
+                    loadMoreItems();
+                }
+            },
+            { threshold: 1.0 },
+        );
 
-    if (pathname.startsWith("/ai_tools") && !(tag as string)) {
-        aiToolsArray = Object.values(aiToolsSortedAndFilteredDictionary);
-    } else if (pathname.startsWith("/user/favorites")) {
-        aiToolsArray = Object.values(favoritesDictionary);
-    } else if (pathname.startsWith("/ai_tools/tags") && !!(tag as string)) {
-        aiToolsArray = Object.values(aiToolsByTagDictionary);
-    } else {
-        aiToolsArray = Object.values(aiToolsDictionary);
-    }
+        if (listEndRef.current) {
+            observer.observe(listEndRef.current);
+        }
+
+        return () => {
+            if (copyListEndRefRef) {
+                observer.disconnect();
+            }
+        };
+    }, [listEndRef, loadMoreItems]);
 
     const isLoading =
         loadingTools ||
@@ -69,10 +70,15 @@ const AiToolList = () => {
                                 <AiTool key={tool.id} index={index} {...tool} />
                             );
                         })}
+                        <li ref={listEndRef} />
                     </ul>
+                    {loadingMoreTools && (
+                        <LoadingAnimation
+                            style={{ width: 100, marginTop: 40 }}
+                        />
+                    )}
                 </>
             )}
-            <LoadMoreToolsBtn />
         </Wrapper>
     );
 };
