@@ -10,7 +10,7 @@ import useToolsUrlSortParamsLoader from "@/hooks/useToolsUrlSortParamsLoader";
 import useUserFavoriteToolsFetcher from "@/hooks/useUserFavoriteToolsFetcher";
 
 const ClientLayout = ({ children, ...rest }: IClientLayout) => {
-    useAutoScroll(100, 1000);
+    useAutoScroll(0, 500);
     useInitialToolsFetcher();
     useToolsSortAndFilter();
     useToolsUrlSortParamsLoader();
