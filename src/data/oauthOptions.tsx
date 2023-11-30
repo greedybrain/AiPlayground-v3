@@ -1,6 +1,6 @@
 import { BsDiscord, BsGithub, BsReddit, BsTwitter } from "react-icons/bs";
 
-import { FaFacebook } from "react-icons/fa";
+// import { FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import type { IOAuthOption } from "@/types";
 import { signIn } from "next-auth/react";
