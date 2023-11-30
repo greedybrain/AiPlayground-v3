@@ -4,6 +4,8 @@ import type { ImageProps } from "next/image";
 import type { LottieProps } from "react-lottie";
 import { Prisma } from "@prisma/client";
 
+//Types
+
 export type AddFavoriteProps = {
     tool: AiToolWithRelations;
     setFavCount: React.Dispatch<React.SetStateAction<number>>;
