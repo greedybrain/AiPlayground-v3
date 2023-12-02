@@ -60,9 +60,7 @@ const SortHandler = () => {
                 onClick={() => openSortAndFilter()}
             >
                 <MdOutlineSort size={24} />
-                <p className={cn("font-semibold", "hidden", "sm:block")}>
-                    Sort & Filter
-                </p>
+                <p className={cn("font-semibold")}>Sort & Filter</p>
             </button>
         </Wrapper>
     );
