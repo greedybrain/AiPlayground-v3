@@ -43,10 +43,10 @@ const Search = (
                     "w-[50px]",
                 )}
             >
-                <BiSearchAlt color="#9c9c9c" size={24} />
+                <BiSearchAlt color="#9c9c9c" size={30} />
             </Wrapper>
             <FieldInput
-                className={cn("flex-1")}
+                className={cn("flex-1", "placeholder:text-lg")}
                 placeholder="Search for tools"
                 onFocus={() => setFocus(true)}
                 onBlur={() => setFocus(false)}

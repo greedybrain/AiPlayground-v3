@@ -98,6 +98,18 @@ export default async function createTools() {
     }
 }
 
+// export async function deleteTools() {
+//     const aiTools = await db.aiTool.findMany();
+
+//     for (const tool of aiTools) {
+//         await db.aiTool.delete({
+//             where: {
+//                 id: tool.id,
+//             },
+//         });
+//     }
+// }
+
 const fetchExistingTags = async (tags: string[]) => {
     return db.tag.findMany({
         where: {
