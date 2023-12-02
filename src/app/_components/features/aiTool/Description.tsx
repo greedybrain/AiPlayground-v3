@@ -3,9 +3,9 @@ import Link from "next/link";
 import React from "react";
 import cn from "@/utils/twMerge";
 
-const Description = ({ text }: DescriptionProps) => {
+const Description = ({ name, text }: DescriptionProps) => {
     return (
-        <Link href={"#"} target="_blank" rel="noreferrer noopener">
+        <Link href={`/tool/${name}`} target="_blank" rel="noreferrer noopener">
             <p
                 className={cn(
                     "line-clamp-3",

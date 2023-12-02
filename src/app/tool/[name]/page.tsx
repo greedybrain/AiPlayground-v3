@@ -1,11 +1,12 @@
 import React from "react";
+import ToolAtGlance from "@/app/_components/features/aiTool/ToolAtGlance";
 import Wrapper from "@/app/_components/ui/Wrapper";
 import cn from "@/utils/twMerge";
 
-const AiToolPage = async () => {
+const AiToolPage = () => {
     return (
-        <Wrapper className={cn("mx-auto max-w-[1200px]", "px-4")}>
-            <Wrapper className={cn("px-4")}></Wrapper>
+        <Wrapper className={cn("mx-auto max-w-[1200px]", "w-11/12")}>
+            <ToolAtGlance />
         </Wrapper>
     );
 };

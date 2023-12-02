@@ -53,7 +53,7 @@ const AiTool = ({
                     tool={tool}
                 />
             </Wrapper>
-            <Description text={tool.description} />
+            <Description name={tool.name} text={tool.description} />
             <PriceInfoMoreToolInfoGroup tool={tool} index={index} />
         </li>
     );

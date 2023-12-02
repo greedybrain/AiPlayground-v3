@@ -6,6 +6,7 @@ const useAiToolStore = create<IAiToolStoreState>((set) => ({
     aiToolsDictionary: {},
     aiToolsSortedAndFilteredDictionary: {},
     aiToolsByTagDictionary: {},
+    toolAtGlance: {} as AiToolWithRelations,
     currentVideoSource: "",
     cursor: "",
     sortAndFilterCursor: "",
@@ -124,6 +125,12 @@ const useAiToolStore = create<IAiToolStoreState>((set) => ({
                 },
             };
         }),
+
+    setToolAtGlance: (toolAtGlance) =>
+        set((state) => ({
+            ...state,
+            toolAtGlance,
+        })),
 }));
 
 export default useAiToolStore;

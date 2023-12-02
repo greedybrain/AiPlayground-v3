@@ -16,7 +16,7 @@ const Header = () => {
             <Wrapper
                 className={cn(
                     "mx-auto max-w-[1200px]",
-                    "p-4",
+                    "py-4",
                     "relative",
                     "w-11/12",
                 )}

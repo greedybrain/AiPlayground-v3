@@ -26,7 +26,7 @@ const HeroContent = () => {
     ];
 
     const shouldBeHidden = hiddenPaths.some((path) => {
-        if (pathname === path) {
+        if (pathname.startsWith(path)) {
             if (tag || searchParams.toString().length) {
                 return false;
             }

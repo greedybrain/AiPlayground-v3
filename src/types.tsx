@@ -38,6 +38,7 @@ export interface IAiToolStoreState {
     aiToolsDictionary: Record<string, AiToolWithRelations>;
     aiToolsSortedAndFilteredDictionary: Record<string, AiToolWithRelations>;
     aiToolsByTagDictionary: Record<string, AiToolWithRelations>;
+    toolAtGlance: AiToolWithRelations;
     currentVideoSource: string;
     cursor: string;
     sortAndFilterCursor: string;
@@ -77,6 +78,7 @@ export interface IAiToolStoreState {
     setLoadingToolsByTag: (isLoading: boolean) => void;
     setTotalToolsByTagCount: (count: number) => void;
     setToolsByTagCursor: (cursor: string) => void;
+    setToolAtGlance: (tool: AiToolWithRelations) => void;
 }
 
 export type AiToolWithRelations = Prisma.AiToolGetPayload<
@@ -108,6 +110,7 @@ export interface ICustomImage
 }
 
 export type DescriptionProps = {
+    name: string;
     text: string;
 };
 
