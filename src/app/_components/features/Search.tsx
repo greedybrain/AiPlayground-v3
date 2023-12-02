@@ -22,11 +22,11 @@ const Search = (
             className={cn(
                 "border-2 border-secondary bg-white",
                 "flex",
-                "h-[60px]",
+                "h-[70px]",
                 "items-center",
                 "mx-auto max-w-[700px]",
                 "rounded-lg",
-                "shadow-neobrut1",
+                "shadow-neobrut2",
                 "transition-all",
                 "w-11/12",
                 {
