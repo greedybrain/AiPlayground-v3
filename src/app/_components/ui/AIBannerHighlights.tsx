@@ -26,6 +26,7 @@ const AIBannerHighlights = () => {
                 "h-[70px]",
                 "mt-20",
                 "overflow-hidden",
+                "px-4",
                 "w-full",
             )}
         >

@@ -4,16 +4,7 @@ import cn from "@/utils/twMerge";
 
 const AIBannerHighlight = ({ content, extra }: IHighlightContent) => {
     return (
-        <li
-            className={cn(
-                "flex",
-                "gap-6",
-                "items-center",
-                "-left-20",
-                "mr-6",
-                "relative",
-            )}
-        >
+        <li className={cn("flex", "gap-6", "items-center", "mr-6")}>
             <p className={cn("border", "font-bold", "text-2xl", "w-[350px]")}>
                 {content}
             </p>
