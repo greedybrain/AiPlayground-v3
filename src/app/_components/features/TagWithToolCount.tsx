@@ -10,6 +10,8 @@ const TagWithToolCount = (tag: AiToolWithRelations["Tags"][0]) => {
             <Link
                 className={cn("inline-block")}
                 href={`/ai_tools/tags/${tag.tagName}`}
+                target="_blank"
+                rel="noreferrer noopener"
             >
                 <Wrapper className={cn("flex", "gap-1", "items-center")}>
                     <p>{tag.tagName}</p>

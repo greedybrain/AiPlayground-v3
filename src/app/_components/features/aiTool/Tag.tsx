@@ -23,6 +23,8 @@ const Tag = (tag: AiToolWithRelations["Tags"][0]) => {
                 href={`/ai_tools/tags/${capitalizeWordsWithSeparators(
                     tag.tagName,
                 )}`}
+                target="_blank"
+                rel="noreferrer noopener"
             >
                 {tag.tagName}
             </Link>

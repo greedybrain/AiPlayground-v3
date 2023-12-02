@@ -8,7 +8,7 @@ import { signIn } from "next-auth/react";
 export default [
     {
         id: 1,
-        method: "google",
+        method: "Google",
         label: "Continue with Google",
         path: "",
         Icon: FcGoogle,
@@ -26,7 +26,7 @@ export default [
     // },
     {
         id: 3,
-        method: "discord",
+        method: "Discord",
         label: "Continue with Discord",
         path: "",
         Icon: BsDiscord,
@@ -36,7 +36,7 @@ export default [
     },
     {
         id: 4,
-        method: "reddit",
+        method: "Reddit",
         label: "Continue with Reddit",
         path: "",
         Icon: BsReddit,
@@ -46,7 +46,7 @@ export default [
     },
     {
         id: 5,
-        method: "github",
+        method: "Github",
         label: "Continue with Github",
         path: "",
         Icon: BsGithub,
@@ -56,7 +56,7 @@ export default [
     },
     {
         id: 6,
-        method: "twitter",
+        method: "Twitter",
         label: "Continue with Twitter",
         path: "",
         Icon: BsTwitter,

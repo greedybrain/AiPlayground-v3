@@ -12,20 +12,35 @@ const OAuthOption = ({
 }: IOAuthOption) => {
     const closeSignInPopup = usePopupStore((state) => state.closeSignInPopup);
 
+    const lastUsedOAuthProvider = localStorage.getItem("lastUsedOAuthProvider");
+
+    const wasLastLoginUsed =
+        lastUsedOAuthProvider && lastUsedOAuthProvider === method;
+
     return (
         <li
             onClick={async () => {
                 localStorage.setItem("lastUsedOAuthProvider", method);
 
                 closeSignInPopup();
-
-                await new Promise((resolve) =>
-                    setTimeout(() => {
-                        resolve(authenticate());
-                    }, 1000),
-                );
+                authenticate();
             }}
-            className={cn("cursor-pointer")}
+            className={cn(
+                "cursor-pointer",
+                "flex flex-col",
+                "gap-1",
+                "items-center",
+                "p-2",
+                "w-[75px]",
+            )}
+            style={
+                wasLastLoginUsed
+                    ? {
+                          border: `2px solid ${color ? color : "#2F2549"}`,
+                          borderRadius: 14,
+                      }
+                    : {}
+            }
         >
             <Icon
                 className={cn("drop-shadow-md")}
@@ -34,6 +49,7 @@ const OAuthOption = ({
                     fill: color,
                 }}
             />
+            <p className={cn("text-sm")}>{method}</p>
         </li>
     );
 };

@@ -11,12 +11,12 @@ export const metadata: Metadata = {
     description: "User's favorites/bookmarks page",
 };
 
-const Favorites = async () => {
+const FavoritesPage = async () => {
     await redirectIfUnauthorized();
 
     return (
         <Wrapper className={cn("mx-auto max-w-[1200px]", "w-11/12")}>
-            <Wrapper>
+            <Wrapper className={cn("px-4")}>
                 <FavoritesInfoMessage />
                 <p
                     className={cn(
@@ -27,7 +27,7 @@ const Favorites = async () => {
                 >
                     All of your favorite tools and resources will be displayed
                     here. Go back to the list of tools to find and add more
-                    tools to your favorites.
+                    tools to your favorites.Page
                 </p>
 
                 {/* <Wrapper className={cn("mt-10", "px-4")}>
@@ -56,4 +56,4 @@ const Favorites = async () => {
     );
 };
 
-export default Favorites;
+export default FavoritesPage;

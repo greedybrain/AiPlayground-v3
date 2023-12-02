@@ -39,14 +39,14 @@ export const options: NextAuthOptions = {
                 });
                 if (foundUser) {
                     if (account?.provider) {
-                        const linkedAccount = await db.account.findFirst({
+                        let linkedAccount = await db.account.findFirst({
                             where: {
                                 userId: foundUser.id,
                                 provider: account.provider,
                             },
                         });
                         if (!linkedAccount) {
-                            await db.account.create({
+                            linkedAccount = await db.account.create({
                                 data: {
                                     userId: foundUser.id,
                                     type: account.type,

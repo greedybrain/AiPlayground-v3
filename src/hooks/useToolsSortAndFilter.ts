@@ -36,8 +36,10 @@ const useToolsSortAndFilter = () => {
                     res.aiTools &&
                         setAiToolsSortedAndFilteredDictionary(res.aiTools);
                     res.nextCursor && setSortAndFitlerCursor(res.nextCursor);
-                    res.totalCount &&
+
+                    if (res.totalCount)
                         setTotalSortAndFilterCount(res.totalCount);
+                    else setTotalSortAndFilterCount(0);
 
                     setSortAndFilterInitiallyLoaded(true);
                 }

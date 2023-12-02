@@ -17,7 +17,7 @@ const useInitialToolsFetcher = () => {
     const handleGetInitialTools = useCallback(() => {
         if (initiallyLoaded) return;
 
-        // setLoadingTools(true);
+        setLoadingTools(true);
 
         getInitialTools()
             .then((res) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
 
 import AIBannerHighlights from "./AIBannerHighlights";
 import Link from "next/link";
@@ -15,14 +15,24 @@ import cn from "@/utils/twMerge";
 const HeroContent = () => {
     const pathname = usePathname();
     const { tag } = useParams();
+    const searchParams = useSearchParams();
 
-    const pathsWhereHidden = ["/user/favorites", "/ai_tools/tags", "/privacy"];
+    const hiddenPaths = [
+        "/user/favorites",
+        "/privacy",
+        "/tool",
+        "/ai_tools/tags",
+        "/ai_tools",
+    ];
 
-    const shouldBeHidden = pathsWhereHidden.some((path) => {
-        return (
-            pathname.startsWith(path) &&
-            !(pathname.startsWith("/ai_tools/tags") && (tag as string))
-        );
+    const shouldBeHidden = hiddenPaths.some((path) => {
+        if (pathname === path) {
+            if (tag || searchParams.toString().length) {
+                return false;
+            }
+            return true;
+        }
+        return false;
     });
 
     if (shouldBeHidden) return null;

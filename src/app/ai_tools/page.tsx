@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     description: "Displays a list of tools sorted accordingly",
 };
 
-export default function AiToolsSorted() {
+export default function AiToolsSortedPage() {
     return (
         <Wrapper className={cn("mx-auto max-w-[1200px]", "px-4")}>
             <AiToolList />

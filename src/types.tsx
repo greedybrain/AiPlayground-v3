@@ -186,7 +186,7 @@ export interface INoAccountHandler
 
 export interface IOAuthOption {
     id: number;
-    method: "google" | "facebook" | "discord" | "reddit" | "github" | "twitter";
+    method: "Google" | "Facebook" | "Discord" | "Reddit" | "Github" | "Twitter";
     label: string;
     path?: string;
     Icon: IconType;

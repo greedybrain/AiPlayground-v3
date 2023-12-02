@@ -49,36 +49,31 @@ const AiToolList = () => {
         loadingFavorites ||
         loadingToolsByTag;
 
+    if (isLoading)
+        return <LoadingAnimation style={{ width: 100, marginTop: 100 }} />;
+
     return (
         <Wrapper className={cn("flex flex-col")}>
-            {isLoading ? (
-                <LoadingAnimation style={{ width: 100, marginTop: 100 }} />
-            ) : (
-                <>
-                    <Wrapper>
-                        <SortHandler />
-                    </Wrapper>
-                    <ul
-                        className={cn(
-                            "grid grid-cols-[repeat(auto-fill,minmax(300px,360px))] gap-8",
-                            "justify-center",
-                            "max-w-[1200px]",
-                        )}
-                    >
-                        {aiToolsArray.map((tool, index) => {
-                            return (
-                                <AiTool key={tool.id} index={index} {...tool} />
-                            );
-                        })}
-                        <li ref={listEndRef} />
-                    </ul>
-                    {loadingMoreTools && (
-                        <LoadingAnimation
-                            style={{ width: 100, marginTop: 40 }}
-                        />
+            <>
+                <Wrapper>
+                    <SortHandler />
+                </Wrapper>
+                <ul
+                    className={cn(
+                        "grid grid-cols-[repeat(auto-fill,minmax(300px,360px))] gap-8",
+                        "justify-center",
+                        "max-w-[1200px]",
                     )}
-                </>
-            )}
+                >
+                    {aiToolsArray.map((tool, index) => {
+                        return <AiTool key={tool.id} index={index} {...tool} />;
+                    })}
+                    <li ref={listEndRef} />
+                </ul>
+                {loadingMoreTools && (
+                    <LoadingAnimation style={{ width: 100, marginTop: 40 }} />
+                )}
+            </>
         </Wrapper>
     );
 };

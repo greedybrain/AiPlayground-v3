@@ -66,7 +66,7 @@ const SignInModal = () => {
                 "items-center",
                 "justify-center",
                 "max-w-[325px] min-w-[325px] md:right-4",
-                "px-4 pb-8",
+                "px-4 pb-7",
                 "rounded-3xl right-0",
                 "shadow-neobrut3",
                 "top-[100px]",
@@ -79,7 +79,7 @@ const SignInModal = () => {
             </p>
             <OAuthOptions />
             {lastUsedOAuthProvider && (
-                <p className={cn("mt-10 font-medium")}>
+                <p className={cn("mt-7 font-medium")}>
                     {`Most Recent Login: ${lastUsedOAuthProvider[0].toLocaleUpperCase()}${lastUsedOAuthProvider.substring(
                         1,
                     )}`}

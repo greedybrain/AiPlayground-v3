@@ -1,10 +1,11 @@
 "use client";
 
+import React, { useState } from "react";
+
 import { BiSearchAlt } from "react-icons/bi";
 import { BsArrowUpRightSquare } from "react-icons/bs";
 import FieldInput from "./FieldInput";
 import FormField from "./FormField";
-import React from "react";
 import Wrapper from "../ui/Wrapper";
 import cn from "@/utils/twMerge";
 
@@ -13,6 +14,7 @@ const Search = (
         /*...rest*/
     },
 ) => {
+    const [isFocused, setFocus] = useState<boolean>(false);
     // const [searchTerm, setSearchTerm] = useState<string>("");
 
     return (
@@ -24,8 +26,12 @@ const Search = (
                 "items-center",
                 "mx-auto max-w-[700px]",
                 "rounded-lg",
-                "shadow-neobrut2",
+                "shadow-neobrut1",
+                "transition-all",
                 "w-11/12",
+                {
+                    "border-[3px] shadow-neobrut3": isFocused,
+                },
             )}
         >
             <Wrapper
@@ -42,6 +48,8 @@ const Search = (
             <FieldInput
                 className={cn("flex-1")}
                 placeholder="Search for tools"
+                onFocus={() => setFocus(true)}
+                onBlur={() => setFocus(false)}
             />
             <Wrapper className={cn("p-2")}>
                 <BsArrowUpRightSquare

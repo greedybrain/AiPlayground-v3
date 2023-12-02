@@ -149,6 +149,27 @@ export const getToolsByTag = async (tag: string) => {
     }
 };
 
+export const getToolByName = async (name: string) => {
+    try {
+        const aiTool = await db.aiTool.findFirst({
+            where: {
+                nameLowercase: name.toLocaleLowerCase(),
+            },
+            include: aiToolInclusion,
+        });
+
+        return {
+            aiTool,
+            success: true,
+        };
+    } catch (error) {
+        return {
+            error,
+            success: false,
+        };
+    }
+};
+
 // Helpers
 const buildWhereClauseForTags = (tags: string | null) => {
     if (!tags) return {};
