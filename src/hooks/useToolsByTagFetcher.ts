@@ -19,11 +19,12 @@ const useToolsByTagFetcher = () => {
         setToolsByTagInitiallyLoaded,
     } = useAiToolStore((state) => state);
 
-    const isAiToolsTagsPath = pathname.startsWith("/ai_tools/tags");
+    const isAiToolsTagsPath = pathname.startsWith("/ai_tools/tags") && tag;
 
     const handleGetToolsByTag = useCallback(() => {
+        if (!isAiToolsTagsPath) return;
+
         const tagAsString = tag as string;
-        if (!isAiToolsTagsPath || (isAiToolsTagsPath && !tagAsString)) return;
 
         setLoadingToolsByTag(true);
 

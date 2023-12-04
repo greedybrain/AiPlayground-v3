@@ -3,6 +3,7 @@
 import type { IClientLayout } from "@/types";
 import React from "react";
 import useInitialToolsFetcher from "@/hooks/useInitialToolsFetcher";
+import useToolsByQueryFetcher from "@/hooks/useToolsByQueryFetcher";
 import useToolsByTagFetcher from "@/hooks/useToolsByTagFetcher";
 import useToolsSortAndFilter from "@/hooks/useToolsSortAndFilter";
 import useToolsUrlSortParamsLoader from "@/hooks/useToolsUrlSortParamsLoader";
@@ -14,6 +15,7 @@ const ClientLayout = ({ children, ...rest }: IClientLayout) => {
     useToolsUrlSortParamsLoader();
     useUserFavoriteToolsFetcher();
     useToolsByTagFetcher();
+    useToolsByQueryFetcher();
 
     return <div {...rest}>{children}</div>;
 };

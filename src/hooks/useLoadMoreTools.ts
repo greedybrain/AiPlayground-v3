@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
 
-import { AiToolWithRelations } from "@/types";
+import { initPathCheckForCorrectToolsRender } from "@/lib/helpers";
 import { loadMoreFavorites } from "@/server/actions/favorites";
 import { loadMoreTools } from "@/server/actions/aitools";
 import toast from "react-hot-toast";
@@ -17,32 +17,37 @@ const useLoadMoreTools = () => {
     const tagAsString = tag as string;
 
     const {
-        favoritesDictionary,
         favoritesCursor,
         addBatchToolsToFavoritesDictionary,
         setFavoritesCursor,
     } = useFavoritesStore((state) => state);
 
     const {
-        aiToolsDictionary,
-        aiToolsByTagDictionary,
-        aiToolsSortedAndFilteredDictionary,
         addAiToolsToDictionary,
         addAiToolsToSortedAndFilteredDictionary,
         addAiToolsByTagToDictionary,
+        addAiToolsToToolsByQueryDictionary,
         cursor,
+        sortAndFilterCursor,
+        toolsByTagCursor,
+        toolsByQueryCursor,
+        tagsGeneratedByQuery,
         setCursor,
         setSortAndFitlerCursor,
         setToolsByTagCursor,
-        sortAndFilterCursor,
-        toolsByTagCursor,
+        setToolsByQueryCursor,
     } = useAiToolStore((state) => state);
 
-    const isAiToolsSortAndFilterPath =
-        pathname.startsWith("/ai_tools") && !tagAsString;
-    const isFavoritesPath = pathname.startsWith("/user/favorites");
-    const isAiToolsForTagPath =
-        pathname.startsWith("/ai_tools/tags") && tagAsString;
+    // PATHS CHECK
+    const {
+        isAiToolsForTagPath,
+        isAiToolsQueryPath,
+        isAiToolsSortAndFilterPath,
+        isFavoritesPath,
+    } = initPathCheckForCorrectToolsRender(pathname, tagAsString, searchParams);
+    // END OF PATHS CHECK
+
+    console.log(isAiToolsForTagPath);
 
     const paramsRecord = Object.fromEntries(searchParams.entries());
 
@@ -52,6 +57,8 @@ const useLoadMoreTools = () => {
         ? toolsByTagCursor
         : isAiToolsSortAndFilterPath
         ? sortAndFilterCursor
+        : isAiToolsQueryPath
+        ? toolsByQueryCursor
         : cursor;
 
     const loadMoreItems = useCallback(async () => {
@@ -63,8 +70,11 @@ const useLoadMoreTools = () => {
         try {
             const res = await action(
                 currentCursor,
-                isAiToolsSortAndFilterPath ? paramsRecord : {},
+                isAiToolsSortAndFilterPath || isAiToolsQueryPath
+                    ? paramsRecord
+                    : {},
                 tagAsString,
+                tagsGeneratedByQuery,
             );
 
             if (res.success) {
@@ -74,6 +84,8 @@ const useLoadMoreTools = () => {
                     ? addAiToolsByTagToDictionary
                     : isAiToolsSortAndFilterPath
                     ? addAiToolsToSortedAndFilteredDictionary
+                    : isAiToolsQueryPath
+                    ? addAiToolsToToolsByQueryDictionary
                     : addAiToolsToDictionary;
 
                 res.aiTools && addFunction(res.aiTools);
@@ -84,6 +96,8 @@ const useLoadMoreTools = () => {
                     ? setToolsByTagCursor
                     : isAiToolsSortAndFilterPath
                     ? setSortAndFitlerCursor
+                    : isAiToolsQueryPath
+                    ? setToolsByQueryCursor
                     : setCursor;
 
                 setCursorFunction(res.nextCursor || "");
@@ -97,33 +111,25 @@ const useLoadMoreTools = () => {
         addAiToolsByTagToDictionary,
         addAiToolsToDictionary,
         addAiToolsToSortedAndFilteredDictionary,
+        addAiToolsToToolsByQueryDictionary,
         addBatchToolsToFavoritesDictionary,
         currentCursor,
         isAiToolsForTagPath,
         isAiToolsSortAndFilterPath,
+        isAiToolsQueryPath,
         isFavoritesPath,
         loadingMoreTools,
         paramsRecord,
         setCursor,
         setFavoritesCursor,
         setSortAndFitlerCursor,
+        setToolsByQueryCursor,
         setToolsByTagCursor,
         tagAsString,
+        tagsGeneratedByQuery,
     ]);
 
-    let aiToolsArray: AiToolWithRelations[];
-
-    if (isAiToolsSortAndFilterPath) {
-        aiToolsArray = Object.values(aiToolsSortedAndFilteredDictionary);
-    } else if (isFavoritesPath) {
-        aiToolsArray = Object.values(favoritesDictionary);
-    } else if (isAiToolsForTagPath) {
-        aiToolsArray = Object.values(aiToolsByTagDictionary);
-    } else {
-        aiToolsArray = Object.values(aiToolsDictionary);
-    }
-
-    return { aiToolsArray, loadingMoreTools, loadMoreItems };
+    return { loadingMoreTools, loadMoreItems };
 };
 
 export default useLoadMoreTools;

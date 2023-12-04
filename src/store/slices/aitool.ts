@@ -6,19 +6,25 @@ const useAiToolStore = create<IAiToolStoreState>((set) => ({
     aiToolsDictionary: {},
     aiToolsSortedAndFilteredDictionary: {},
     aiToolsByTagDictionary: {},
+    aiToolsByQueryDictionary: {},
     toolAtGlance: {} as AiToolWithRelations,
     currentVideoSource: "",
     cursor: "",
     sortAndFilterCursor: "",
     toolsByTagCursor: "",
+    toolsByQueryCursor: "",
     loadingTools: true,
     loadingSortAndFilteredTools: false,
     loadingToolsByTag: false,
+    loadingToolsByQuery: false,
     totalSortAndFilterCount: 0,
     totalToolsByTagCount: 0,
+    totalToolsByQueryCount: 0,
     initiallyLoaded: false,
     sortAndFilterInitiallyLoaded: false,
     toolsByTagInitiallyLoaded: false,
+    toolsByQueryInitiallyLoaded: false,
+    tagsGeneratedByQuery: [],
 
     setAiToolsDictionary: (aiTools) =>
         set((state) => {
@@ -53,6 +59,16 @@ const useAiToolStore = create<IAiToolStoreState>((set) => ({
             return {
                 ...state,
                 aiToolsSortedAndFilteredDictionary,
+            };
+        }),
+
+    setAiToolsByQueryDictionary: (aiTools) =>
+        set((state) => {
+            const aiToolsByQueryDictionary = convertToolsArrayToDict(aiTools);
+
+            return {
+                ...state,
+                aiToolsByQueryDictionary,
             };
         }),
 
@@ -126,11 +142,39 @@ const useAiToolStore = create<IAiToolStoreState>((set) => ({
             };
         }),
 
+    addAiToolsToToolsByQueryDictionary: (aiTools) =>
+        set((state) => {
+            const additionalToolItems = convertToolsArrayToDict(aiTools);
+
+            return {
+                ...state,
+                aiToolsByQueryDictionary: {
+                    ...state.aiToolsByQueryDictionary,
+                    ...additionalToolItems,
+                },
+            };
+        }),
+
     setToolAtGlance: (toolAtGlance) =>
         set((state) => ({
             ...state,
             toolAtGlance,
         })),
+
+    setToolsByQueryCursor: (toolsByQueryCursor) =>
+        set((state) => ({ ...state, toolsByQueryCursor })),
+
+    setLoadingToolsByQuery: (loadingToolsByQuery) =>
+        set((state) => ({ ...state, loadingToolsByQuery })),
+
+    setTagsGeneratedByQuery: (tagsGeneratedByQuery) =>
+        set((state) => ({ ...state, tagsGeneratedByQuery })),
+
+    setToolsByQueryInitiallyLoaded: (toolsByQueryInitiallyLoaded) =>
+        set((state) => ({ ...state, toolsByQueryInitiallyLoaded })),
+
+    setTotalToolsByQueryCount: (totalToolsByQueryCount) =>
+        set((state) => ({ ...state, totalToolsByQueryCount })),
 }));
 
 export default useAiToolStore;

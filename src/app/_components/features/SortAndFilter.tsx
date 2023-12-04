@@ -51,8 +51,6 @@ const SortAndFilter = () => {
     const handleSubmit = async () => {
         closeSortAndFilter();
 
-        // setSortAndFitlerCursor("");
-
         const queryParams = new URLSearchParams();
 
         const tags = Object.values(tagsSelected).map((tag) =>

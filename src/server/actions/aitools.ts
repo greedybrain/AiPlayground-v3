@@ -3,6 +3,7 @@
 import { ITEMS_PER_PAGE } from "@/constants";
 import { Prisma } from "@prisma/client";
 import { aiToolInclusion } from "@/utils/prismaHelper";
+import { convertUserQueryToTags } from "./openai";
 import { db } from "../db";
 import { setNextCursor } from "@/lib/helpers";
 
@@ -37,6 +38,7 @@ export const loadMoreTools = async (
     cursor: string,
     searchParams: SearhParams = {},
     tag?: string,
+    generatedTags?: string[],
 ) => {
     try {
         let where = {};
@@ -45,10 +47,25 @@ export const loadMoreTools = async (
         };
 
         if (tag) {
+            console.log("HIT HERE");
             where = buildWhereClauseForTag(tag);
         } else if (searchParams["price_range"]) {
             where = combineWhereClauses(searchParams);
             orderBy = buildAiToolOrderByClause(searchParams);
+        } else if (
+            generatedTags &&
+            generatedTags.length > 0 &&
+            searchParams["query"]
+        ) {
+            where = {
+                Tags: {
+                    some: {
+                        tagName: {
+                            in: generatedTags,
+                        },
+                    },
+                },
+            };
         }
 
         const aiTools = await db.aiTool.findMany({
@@ -170,6 +187,61 @@ export const getToolByName = async (name: string) => {
     }
 };
 
+export const getToolsByQuery = async (userQuery: string) => {
+    try {
+        const {
+            message,
+            success: conversionSuccess,
+            tags: generatedTags,
+        } = await convertUserQueryToTags(userQuery);
+
+        const where = {
+            Tags: {
+                some: {
+                    tagName: {
+                        in: generatedTags,
+                    },
+                },
+            },
+        };
+
+        if (conversionSuccess) {
+            const aiTools = await db.aiTool.findMany({
+                where,
+                orderBy: {
+                    createdAt: "desc",
+                },
+                include: aiToolInclusion,
+                take: ITEMS_PER_PAGE,
+            });
+
+            const totalCount = await db.aiTool.count({
+                where,
+            });
+
+            const nextCursor = setNextCursor(aiTools);
+
+            return {
+                aiTools,
+                tags: generatedTags,
+                totalCount,
+                nextCursor,
+                success: true,
+            };
+        }
+
+        return {
+            message,
+            success: false,
+        };
+    } catch (error: any) {
+        return {
+            message: error.message,
+            success: false,
+        };
+    }
+};
+
 // Helpers
 const buildWhereClauseForTags = (tags: string | null) => {
     if (!tags) return {};
@@ -252,6 +324,18 @@ const buildWhereClauseForTag = (tag: string) => {
         },
     };
 };
+
+// const buildWhereClauseForQuery = (generatedTags: string[] | undefined) => {
+//     return {
+//         Tags: {
+//             some: {
+//                 tagName: {
+//                     in: generatedTags,
+//                 },
+//             },
+//         },
+//     };
+// };
 
 const buildAiToolOrderByClause = (searchParams: SearhParams) => {
     const sort = searchParams["sort"];

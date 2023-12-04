@@ -35,50 +35,73 @@ export const aiToolWithPriceInfo = Prisma.validator<Prisma.AiToolDefaultArgs>()(
 // ================================
 
 export interface IAiToolStoreState {
-    aiToolsDictionary: Record<string, AiToolWithRelations>;
-    aiToolsSortedAndFilteredDictionary: Record<string, AiToolWithRelations>;
-    aiToolsByTagDictionary: Record<string, AiToolWithRelations>;
     toolAtGlance: AiToolWithRelations;
-    currentVideoSource: string;
-    cursor: string;
-    sortAndFilterCursor: string;
-    toolsByTagCursor: string;
-    loadingTools: boolean;
-    loadingSortAndFilteredTools: boolean;
-    loadingToolsByTag: boolean;
-    totalSortAndFilterCount: number;
-    totalToolsByTagCount: number;
-    sortAndFilterInitiallyLoaded: boolean;
-    initiallyLoaded: boolean;
-    toolsByTagInitiallyLoaded: boolean;
+    setToolAtGlance: (tool: AiToolWithRelations) => void;
 
+    currentVideoSource: string;
+    setVideoSource: (src: string) => void;
+
+    // DEFAULT TOOLS
+    aiToolsDictionary: Record<string, AiToolWithRelations>;
+    loadingTools: boolean;
+    initiallyLoaded: boolean;
+    cursor: string;
     setAiToolsDictionary: (
         aiTools: AiToolWithRelations[] | Record<string, AiToolWithRelations>,
     ) => void;
     addAiToolsToDictionary: (aiTools: AiToolWithRelations[]) => void;
+    setCursor: (cursor: string) => void;
+    setLoadingTools: (isLoading: boolean) => void;
+    setInitiallyLoaded: (initiallyLoaded: boolean) => void;
+
+    // SORT AND FILTER TOOLS
+    aiToolsSortedAndFilteredDictionary: Record<string, AiToolWithRelations>;
+    loadingSortAndFilteredTools: boolean;
+    sortAndFilterCursor: string;
+    totalSortAndFilterCount: number;
+    sortAndFilterInitiallyLoaded: boolean;
     setAiToolsSortedAndFilteredDictionary: (
         aiTools: AiToolWithRelations[],
     ) => void;
     addAiToolsToSortedAndFilteredDictionary: (
         aiTools: AiToolWithRelations[],
     ) => void;
-    addAiToolsByTagToDictionary: (aiTools: AiToolWithRelations[]) => void;
-    setAiToolsByTagDictionary: (aiTools: AiToolWithRelations[]) => void;
-    setVideoSource: (src: string) => void;
-    setCursor: (cursor: string) => void;
     setSortAndFitlerCursor: (cursor: string) => void;
-    setLoadingTools: (isLoading: boolean) => void;
-    setLoadingSortAndFilteredTools: (isLoading: boolean) => void;
     setTotalSortAndFilterCount: (count: number) => void;
     setSortAndFilterInitiallyLoaded: (
         sortAndFilterInitiallyLoaded: boolean,
     ) => void;
-    setInitiallyLoaded: (initiallyLoaded: boolean) => void;
+    setLoadingSortAndFilteredTools: (isLoading: boolean) => void;
+
+    // BY TAG TOOLS
+    aiToolsByTagDictionary: Record<string, AiToolWithRelations>;
+    toolsByTagCursor: string;
+    loadingToolsByTag: boolean;
+    totalToolsByTagCount: number;
+    toolsByTagInitiallyLoaded: boolean;
+    addAiToolsByTagToDictionary: (aiTools: AiToolWithRelations[]) => void;
+    setAiToolsByTagDictionary: (aiTools: AiToolWithRelations[]) => void;
     setToolsByTagInitiallyLoaded: (initiallyLoaded: boolean) => void;
     setLoadingToolsByTag: (isLoading: boolean) => void;
     setTotalToolsByTagCount: (count: number) => void;
     setToolsByTagCursor: (cursor: string) => void;
-    setToolAtGlance: (tool: AiToolWithRelations) => void;
+
+    // BY QUERY TOOLS
+    aiToolsByQueryDictionary: Record<string, AiToolWithRelations>;
+    toolsByQueryCursor: string;
+    loadingToolsByQuery: boolean;
+    toolsByQueryInitiallyLoaded: boolean;
+    tagsGeneratedByQuery: string[];
+    totalToolsByQueryCount: number;
+    addAiToolsToToolsByQueryDictionary: (
+        aiTools: AiToolWithRelations[],
+    ) => void;
+    setAiToolsByQueryDictionary: (aiTools: AiToolWithRelations[]) => void;
+    setLoadingToolsByQuery: (isLoading: boolean) => void;
+    setToolsByQueryInitiallyLoaded: (loaded: boolean) => void;
+    setToolsByQueryCursor: (cursor: string) => void;
+    setTagsGeneratedByQuery: (tags: string[]) => void;
+    setTotalToolsByQueryCount: (count: number) => void;
 }
 
 export type AiToolWithRelations = Prisma.AiToolGetPayload<

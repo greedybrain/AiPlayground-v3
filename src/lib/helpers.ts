@@ -1,5 +1,6 @@
 import type { AiToolWithRelations } from "@/types";
 import { ITEMS_PER_PAGE } from "@/constants";
+import { ReadonlyURLSearchParams } from "next/navigation";
 
 export const setNextCursor = (
     aiTools: AiToolWithRelations[],
@@ -29,4 +30,31 @@ export const capitalizeWordsWithSeparators = (inputString: string) => {
     }
 
     return sanitizedString;
+};
+
+export const initPathCheckForCorrectToolsRender = (
+    pathname: string,
+    tagAsString: string,
+    searchParams: ReadonlyURLSearchParams,
+) => {
+    const isAiToolsSortAndFilterPath =
+        pathname.startsWith("/ai_tools") &&
+        !tagAsString &&
+        !searchParams.toString().includes("query");
+
+    const isFavoritesPath = pathname.startsWith("/user/favorites");
+
+    const isAiToolsForTagPath =
+        pathname.startsWith("/ai_tools/tags") && !!tagAsString;
+
+    const isAiToolsQueryPath =
+        pathname.startsWith("/ai_tools/search") &&
+        searchParams.toString().includes("query");
+
+    return {
+        isAiToolsForTagPath,
+        isAiToolsQueryPath,
+        isAiToolsSortAndFilterPath,
+        isFavoritesPath,
+    };
 };

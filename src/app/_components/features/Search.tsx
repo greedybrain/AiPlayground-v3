@@ -8,14 +8,23 @@ import FieldInput from "./FieldInput";
 import FormField from "./FormField";
 import Wrapper from "../ui/Wrapper";
 import cn from "@/utils/twMerge";
+import { useRouter } from "next/navigation";
 
-const Search = (
-    {
-        /*...rest*/
-    },
-) => {
+const Search = () => {
     const [isFocused, setFocus] = useState<boolean>(false);
-    // const [searchTerm, setSearchTerm] = useState<string>("");
+    const [userQuery, setUserQuery] = useState<string>("");
+    const { push } = useRouter();
+
+    const handleSubmit = async () => {
+        const queryParams = new URLSearchParams();
+
+        queryParams.append("query", userQuery);
+
+        const path = `/ai_tools/search?${queryParams.toString()}`;
+
+        setUserQuery("");
+        push(path);
+    };
 
     return (
         <FormField
@@ -46,12 +55,14 @@ const Search = (
                 <BiSearchAlt color="#9c9c9c" size={30} />
             </Wrapper>
             <FieldInput
-                className={cn("flex-1", "placeholder:text-lg")}
+                className={cn("flex-1", "placeholder:text-lg", "text-lg")}
                 placeholder="Search for tools"
                 onFocus={() => setFocus(true)}
                 onBlur={() => setFocus(false)}
+                onChange={(event) => setUserQuery(event.target.value)}
+                value={userQuery}
             />
-            <Wrapper className={cn("p-2")}>
+            <Wrapper className={cn("p-2")} onClick={handleSubmit}>
                 <BsArrowUpRightSquare
                     className={cn("bg-primary", "cursor-pointer", "rounded-md")}
                     size={40}

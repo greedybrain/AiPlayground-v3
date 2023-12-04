@@ -15,7 +15,7 @@ const Tag = (tag: AiToolWithRelations["Tags"][0]) => {
                 "bg-white border border-secondary",
                 "cursor-pointer",
                 "font-semibold",
-                "max-w-[125px]",
+                // "max-w-[125px]",
                 "px-3 py-2",
                 "rounded-md",
                 "shadow-neobrut1",
