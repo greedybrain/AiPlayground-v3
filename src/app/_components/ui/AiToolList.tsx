@@ -18,7 +18,7 @@ const AiToolList = () => {
     const { loadMoreItems, loadingMoreTools } = useLoadMoreTools();
 
     const pathname = usePathname();
-    const { tag } = useParams();
+    const { tag, name } = useParams();
     const searchParams = useSearchParams();
 
     const { loadingFavorites, favoritesDictionary } = useFavoritesStore(
@@ -29,10 +29,12 @@ const AiToolList = () => {
         loadingSortAndFilteredTools,
         loadingToolsByTag,
         loadingToolsByQuery,
+        loadingToolsByRelation,
         aiToolsByQueryDictionary,
         aiToolsByTagDictionary,
         aiToolsSortedAndFilteredDictionary,
         aiToolsDictionary,
+        aiToolsByRelationDictionary,
     } = useAiToolStore((state) => state);
 
     const listEndRef = useRef<HTMLLIElement | null>(null);
@@ -60,6 +62,7 @@ const AiToolList = () => {
     }, [listEndRef, loadMoreItems]);
 
     const tagAsString = tag as string;
+    const nameAsString = name as string;
 
     // PATHS CHECK
     const {
@@ -67,7 +70,13 @@ const AiToolList = () => {
         isAiToolsQueryPath,
         isAiToolsSortAndFilterPath,
         isFavoritesPath,
-    } = initPathCheckForCorrectToolsRender(pathname, tagAsString, searchParams);
+        isAiToolByNamePath,
+    } = initPathCheckForCorrectToolsRender(
+        pathname,
+        tagAsString,
+        nameAsString,
+        searchParams,
+    );
     // END OF PATHS CHECK
 
     let aiToolsArray: AiToolWithRelations[];
@@ -80,6 +89,8 @@ const AiToolList = () => {
         aiToolsArray = Object.values(aiToolsByTagDictionary);
     } else if (isAiToolsQueryPath) {
         aiToolsArray = Object.values(aiToolsByQueryDictionary);
+    } else if (isAiToolByNamePath) {
+        aiToolsArray = Object.values(aiToolsByRelationDictionary);
     } else {
         aiToolsArray = Object.values(aiToolsDictionary);
     }
@@ -89,7 +100,8 @@ const AiToolList = () => {
         loadingSortAndFilteredTools ||
         loadingFavorites ||
         loadingToolsByTag ||
-        loadingToolsByQuery;
+        loadingToolsByQuery ||
+        loadingToolsByRelation;
 
     if (isLoading)
         return <LoadingAnimation style={{ width: 100, marginTop: 100 }} />;
@@ -99,6 +111,17 @@ const AiToolList = () => {
             <>
                 <Wrapper>
                     <SortHandler />
+                    {isAiToolByNamePath && (
+                        <h2
+                            className={cn(
+                                "font-bold",
+                                "mb-8",
+                                "text-2xl text-center",
+                            )}
+                        >
+                            Related AI Tools
+                        </h2>
+                    )}
                 </Wrapper>
                 <ul
                     className={cn(

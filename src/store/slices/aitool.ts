@@ -25,6 +25,10 @@ const useAiToolStore = create<IAiToolStoreState>((set) => ({
     toolsByTagInitiallyLoaded: false,
     toolsByQueryInitiallyLoaded: false,
     tagsGeneratedByQuery: [],
+    aiToolsByRelationDictionary: {},
+    toolsByRelationCursor: "",
+    loadingToolsByRelation: false,
+    toolsByRelationInitiallyLoaded: false,
 
     setAiToolsDictionary: (aiTools) =>
         set((state) => {
@@ -175,6 +179,37 @@ const useAiToolStore = create<IAiToolStoreState>((set) => ({
 
     setTotalToolsByQueryCount: (totalToolsByQueryCount) =>
         set((state) => ({ ...state, totalToolsByQueryCount })),
+
+    addAiToolsToToolsByRelationDictionary: (aiTools) =>
+        set((state) => {
+            const additionalToolItems = convertToolsArrayToDict(aiTools);
+
+            return {
+                ...state,
+                aiToolsByRelationDictionary: {
+                    ...state.aiToolsByRelationDictionary,
+                    ...additionalToolItems,
+                },
+            };
+        }),
+    setAiToolsByRelationDictionary: (aiTools) =>
+        set((state) => {
+            const aiToolsByRelationDictionary =
+                convertToolsArrayToDict(aiTools);
+
+            return {
+                ...state,
+                aiToolsByRelationDictionary,
+            };
+        }),
+    setLoadingToolsByRelation: (loadingToolsByRelation) =>
+        set((state) => ({ ...state, loadingToolsByRelation })),
+
+    setToolsByRelationInitiallyLoaded: (toolsByRelationInitiallyLoaded) =>
+        set((state) => ({ ...state, toolsByRelationInitiallyLoaded })),
+
+    setToolsByRelationCursor: (toolsByRelationCursor) =>
+        set((state) => ({ ...state, toolsByRelationCursor })),
 }));
 
 export default useAiToolStore;

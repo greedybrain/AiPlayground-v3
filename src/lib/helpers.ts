@@ -35,6 +35,7 @@ export const capitalizeWordsWithSeparators = (inputString: string) => {
 export const initPathCheckForCorrectToolsRender = (
     pathname: string,
     tagAsString: string,
+    nameAsString: string,
     searchParams: ReadonlyURLSearchParams,
 ) => {
     const isAiToolsSortAndFilterPath =
@@ -51,10 +52,13 @@ export const initPathCheckForCorrectToolsRender = (
         pathname.startsWith("/ai_tools/search") &&
         searchParams.toString().includes("query");
 
+    const isAiToolByNamePath = pathname.startsWith("/tool") && !!nameAsString;
+
     return {
         isAiToolsForTagPath,
         isAiToolsQueryPath,
         isAiToolsSortAndFilterPath,
         isFavoritesPath,
+        isAiToolByNamePath,
     };
 };

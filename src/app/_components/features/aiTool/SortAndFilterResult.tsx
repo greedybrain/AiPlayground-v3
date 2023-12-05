@@ -9,7 +9,7 @@ import useFavoritesStore from "@/store/slices/favorite";
 const SortAndFilterResult = () => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
-    const { tag } = useParams();
+    const { tag, name } = useParams();
     const [resultCount, setResultCount] = useState<number>(0);
 
     const {
@@ -29,6 +29,7 @@ const SortAndFilterResult = () => {
         } = initPathCheckForCorrectToolsRender(
             pathname,
             tag as string,
+            name as string,
             searchParams,
         );
 
@@ -43,6 +44,7 @@ const SortAndFilterResult = () => {
         }
     }, [
         favoritesTotalCount,
+        name,
         pathname,
         searchParams,
         tag,

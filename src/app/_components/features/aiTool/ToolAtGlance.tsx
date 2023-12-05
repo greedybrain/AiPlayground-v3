@@ -7,7 +7,6 @@ import { BsCheck } from "react-icons/bs";
 import { FaPlay } from "react-icons/fa";
 import FavCountBookmarkDataGroup from "./FavCountBookmarkDataGroup";
 import Identity from "../../ui/Identity";
-import LoadingAnimation from "../LoadingAnimation";
 import { MdOutlineArrowOutward } from "react-icons/md";
 import PriceInfo from "./PriceInfo";
 import Tag from "./Tag";
@@ -29,15 +28,7 @@ const ToolAtGlance = () => {
         };
     }, [setToolAtGlance]);
 
-    if (!toolAtGlance.id)
-        return (
-            <LoadingAnimation
-                style={{
-                    width: 100,
-                    marginTop: 100,
-                }}
-            />
-        );
+    if (!toolAtGlance.id) return null;
 
     const {
         affLink,
@@ -120,7 +111,7 @@ const ToolAtGlance = () => {
                 </p>
                 <ul className={cn("flex flex-wrap", "gap-3", "mt-8")}>
                     {Tags.map((tag) => (
-                        <Tag key={tag.id} {...tag} />
+                        <Tag key={tag.id} tag={tag} />
                     ))}
                 </ul>
                 <Wrapper className={cn("mt-8")}>
@@ -148,9 +139,11 @@ const ToolAtGlance = () => {
                     <span className={cn("font-semibold")}>Check it out</span>
                     <MdOutlineArrowOutward size={24} />
                 </a>
-                <h2 className={cn("font-semibold", "mt-20", "text-xl")}>
-                    Highlights
-                </h2>
+                {KeyTakeaways.length > 0 && (
+                    <h2 className={cn("font-semibold", "mt-20", "text-xl")}>
+                        Highlights
+                    </h2>
+                )}
                 <ul className={cn("flex flex-col", "gap-4", "mt-5")}>
                     {KeyTakeaways.map((kt) => {
                         return (

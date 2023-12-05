@@ -8,6 +8,7 @@ import { db } from "../db";
 import { setNextCursor } from "@/lib/helpers";
 
 type SearhParams = Record<string, string>;
+type Params = SearhParams;
 
 export const getInitialTools = async () => {
     try {
@@ -37,8 +38,8 @@ export const getInitialTools = async () => {
 export const loadMoreTools = async (
     cursor: string,
     searchParams: SearhParams = {},
-    tag?: string,
-    generatedTags?: string[],
+    params: Params,
+    tags?: string[],
 ) => {
     try {
         let where = {};
@@ -46,22 +47,21 @@ export const loadMoreTools = async (
             createdAt: "desc",
         };
 
-        if (tag) {
-            console.log("HIT HERE");
-            where = buildWhereClauseForTag(tag);
+        if (params["tag"]) {
+            where = buildWhereClauseForTag(params["tag"]);
         } else if (searchParams["price_range"]) {
             where = combineWhereClauses(searchParams);
             orderBy = buildAiToolOrderByClause(searchParams);
         } else if (
-            generatedTags &&
-            generatedTags.length > 0 &&
-            searchParams["query"]
+            tags &&
+            tags.length > 0 &&
+            (searchParams["query"] || params["name"])
         ) {
             where = {
                 Tags: {
                     some: {
                         tagName: {
-                            in: generatedTags,
+                            in: tags,
                         },
                     },
                 },
@@ -233,6 +233,42 @@ export const getToolsByQuery = async (userQuery: string) => {
         return {
             message,
             success: false,
+        };
+    } catch (error: any) {
+        return {
+            message: error.message,
+            success: false,
+        };
+    }
+};
+
+export const getToolsByRelation = async (tags: string[]) => {
+    try {
+        const where = {
+            Tags: {
+                some: {
+                    tagName: {
+                        in: tags,
+                    },
+                },
+            },
+        };
+
+        const aiTools = await db.aiTool.findMany({
+            where,
+            orderBy: {
+                createdAt: "desc",
+            },
+            include: aiToolInclusion,
+            take: ITEMS_PER_PAGE,
+        });
+
+        const nextCursor = setNextCursor(aiTools);
+
+        return {
+            aiTools,
+            nextCursor,
+            success: true,
         };
     } catch (error: any) {
         return {

@@ -11,8 +11,9 @@ import cn from "@/utils/twMerge";
 
 const AiTool = ({
     index,
+    shouldTruncateTags,
     ...tool
-}: AiToolWithRelations & { index: number }) => {
+}: AiToolWithRelations & { index: number; shouldTruncateTags?: boolean }) => {
     return (
         <li
             key={tool.id}

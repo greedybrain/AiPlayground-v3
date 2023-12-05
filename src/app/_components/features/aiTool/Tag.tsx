@@ -3,11 +3,14 @@ import Link from "next/link";
 import React from "react";
 import { capitalizeWordsWithSeparators } from "@/lib/helpers";
 import cn from "@/utils/twMerge";
-import { usePathname } from "next/navigation";
 
-const Tag = (tag: AiToolWithRelations["Tags"][0]) => {
-    const pathname = usePathname();
-
+const Tag = ({
+    tag,
+    shouldTruncate,
+}: {
+    tag: AiToolWithRelations["Tags"][0];
+    shouldTruncate?: boolean;
+}) => {
     return (
         <li
             key={tag.id}
@@ -21,7 +24,7 @@ const Tag = (tag: AiToolWithRelations["Tags"][0]) => {
                 "shadow-neobrut1",
                 "text-secondary text-sm",
                 {
-                    truncate: !pathname.startsWith("/tool"),
+                    truncate: shouldTruncate,
                 },
             )}
         >

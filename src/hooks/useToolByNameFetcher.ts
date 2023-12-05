@@ -13,7 +13,7 @@ const useToolByNameFetcher = () => {
 
     const { setToolAtGlance } = useAiToolStore((state) => state);
 
-    const isToolPath = pathname.startsWith("/tool");
+    const isToolPath = pathname.startsWith("/tool") && !!name;
 
     const handleGetToolByName = useCallback(() => {
         if (!isToolPath) return;
@@ -26,16 +26,12 @@ const useToolByNameFetcher = () => {
             .then((res) => {
                 if (res.success) {
                     res.aiTool && setToolAtGlance(res.aiTool);
-
-                    // setToolsByTagInitiallyLoaded(true);
                 }
             })
             .catch((error) => {
                 toast.error(error?.message, { style: darkModeStyle });
             })
-            .finally(() => {
-                // setLoadingToolsByTag(false);
-            });
+            .finally(() => {});
     }, [isToolPath, name, setToolAtGlance]);
 
     useEffect(() => {

@@ -63,7 +63,7 @@ const TagsForTool = ({ tags }: TagsProps) => {
         >
             <ul className={cn("flex", "gap-2", "px-4")}>
                 {tagsArray.slice(0, 2).map((tag) => (
-                    <Tag key={tag.id} {...tag} />
+                    <Tag key={tag.id} shouldTruncate tag={tag} />
                 ))}
                 {renderTagsLengthDifference()}
             </ul>

@@ -102,6 +102,19 @@ export interface IAiToolStoreState {
     setToolsByQueryCursor: (cursor: string) => void;
     setTagsGeneratedByQuery: (tags: string[]) => void;
     setTotalToolsByQueryCount: (count: number) => void;
+
+    // BY RELATION TOOLS
+    aiToolsByRelationDictionary: Record<string, AiToolWithRelations>;
+    toolsByRelationCursor: string;
+    loadingToolsByRelation: boolean;
+    toolsByRelationInitiallyLoaded: boolean;
+    addAiToolsToToolsByRelationDictionary: (
+        aiTools: AiToolWithRelations[],
+    ) => void;
+    setAiToolsByRelationDictionary: (aiTools: AiToolWithRelations[]) => void;
+    setLoadingToolsByRelation: (isLoading: boolean) => void;
+    setToolsByRelationInitiallyLoaded: (loaded: boolean) => void;
+    setToolsByRelationCursor: (cursor: string) => void;
 }
 
 export type AiToolWithRelations = Prisma.AiToolGetPayload<

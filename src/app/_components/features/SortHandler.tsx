@@ -28,7 +28,9 @@ const SortHandler = () => {
     const pathname = usePathname();
     const { openSortAndFilter } = usePopupStore((state) => state);
 
-    if (pathname.startsWith("/user/favorites")) return null;
+    const hiddenPaths = ["/user/favorites", "/tool"]
+
+    if (hiddenPaths.some(path => pathname.startsWith(path))) return null;
 
     return (
         <Wrapper
