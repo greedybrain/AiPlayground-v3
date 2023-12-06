@@ -1,7 +1,6 @@
 import { BsArrowUpRightSquare, BsArrowUpRightSquareFill } from "react-icons/bs";
 
 import { AiToolWithRelations } from "@/types";
-import Link from "next/link";
 import React from "react";
 import cn from "@/utils/twMerge";
 
