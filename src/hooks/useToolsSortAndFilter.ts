@@ -11,6 +11,7 @@ const useToolsSortAndFilter = () => {
     const searchParams = useSearchParams();
 
     const {
+        sortAndFilterInitiallyLoaded,
         setSortAndFilterInitiallyLoaded,
         setSortAndFitlerCursor,
         setAiToolsSortedAndFilteredDictionary,
@@ -28,6 +29,14 @@ const useToolsSortAndFilter = () => {
     }, [searchParams]);
 
     const handleGetToolsBySortAndFilter = useCallback(() => {
+        if (
+            !(
+                pathname.startsWith("/ai_tools") && paramsRecord["price_range"]
+            ) ||
+            sortAndFilterInitiallyLoaded
+        )
+            return;
+
         setLoadingSortAndFilteredTools(true);
 
         getToolsBySortAndFilter(paramsRecord)
@@ -52,18 +61,18 @@ const useToolsSortAndFilter = () => {
             });
     }, [
         paramsRecord,
+        pathname,
         setAiToolsSortedAndFilteredDictionary,
         setSortAndFitlerCursor,
         setLoadingSortAndFilteredTools,
         setTotalSortAndFilterCount,
         setSortAndFilterInitiallyLoaded,
+        sortAndFilterInitiallyLoaded,
     ]);
 
     useEffect(() => {
-        if (pathname.startsWith("/ai_tools") && paramsRecord["price_range"]) {
-            handleGetToolsBySortAndFilter();
-        }
-    }, [handleGetToolsBySortAndFilter, paramsRecord, pathname]);
+        handleGetToolsBySortAndFilter();
+    }, [handleGetToolsBySortAndFilter]);
 };
 
 export default useToolsSortAndFilter;

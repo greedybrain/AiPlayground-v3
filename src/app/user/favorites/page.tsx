@@ -25,29 +25,9 @@ const FavoritesPage = async () => {
                         "text-sm text-left",
                     )}
                 >
-                    All of your favorite tools and resources will be displayed
-                    here. Go back to the list of tools to find and add more
-                    tools to your favorites.Page
+                    Explore all of your favorite tools and resources in one
+                    place.
                 </p>
-
-                {/* <Wrapper className={cn("mt-10", "px-4")}>
-                    <Link
-                        href="/"
-                        className={cn(
-                            "bg-primary border-2 border-secondary",
-                            "font-bold flex",
-                            "h-[60px]",
-                            "items-center",
-                            "justify-center",
-                            "mt-10",
-                            "rounded-lg",
-                            "shadow-neobrut2 self-center",
-                            "w-[150px]",
-                        )}
-                    >
-                        Back to home
-                    </Link>
-                </Wrapper> */}
             </Wrapper>
             <Wrapper className={cn("mt-10")}>
                 <AiToolList />
