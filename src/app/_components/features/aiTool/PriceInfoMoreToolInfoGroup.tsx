@@ -23,7 +23,7 @@ const PriceInfoMoreToolInfoGroup = ({
             )}
         >
             <PriceInfo tool={tool} />
-            <MoreToolInfoLink index={index} />
+            <MoreToolInfoLink tool={tool} index={index} />
         </Wrapper>
     );
 };

@@ -1,12 +1,21 @@
 import { BsArrowUpRightSquare, BsArrowUpRightSquareFill } from "react-icons/bs";
 
+import { AiToolWithRelations } from "@/types";
 import Link from "next/link";
 import React from "react";
 import cn from "@/utils/twMerge";
 
-const MoreToolInfo = ({ index }: { index: number }) => {
+const MoreToolInfo = ({
+    tool,
+    index,
+}: {
+    tool: AiToolWithRelations;
+    index: number;
+}) => {
+    const link = tool.affLink ? tool.affLink : tool.websiteLink;
+
     return (
-        <Link href={"#"} target="_blank" rel="noreferrer noopener">
+        <a href={link} target="_blank" rel="noreferrer noopener">
             {index === 0 ? (
                 <BsArrowUpRightSquare
                     className={cn("bg-primary", "cursor-pointer", "rounded-md")}
@@ -18,7 +27,7 @@ const MoreToolInfo = ({ index }: { index: number }) => {
                     size={40}
                 />
             )}
-        </Link>
+        </a>
     );
 };
 
