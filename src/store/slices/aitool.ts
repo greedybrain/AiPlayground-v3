@@ -3,32 +3,33 @@ import type { AiToolWithRelations, IAiToolStoreState } from "@/types";
 import { create } from "zustand";
 
 const useAiToolStore = create<IAiToolStoreState>((set) => ({
+    aiToolsByQueryDictionary: {},
+    aiToolsByRelationDictionary: {},
+    aiToolsByTagDictionary: {},
     aiToolsDictionary: {},
     aiToolsSortedAndFilteredDictionary: {},
-    aiToolsByTagDictionary: {},
-    aiToolsByQueryDictionary: {},
-    toolAtGlance: {} as AiToolWithRelations,
     currentVideoSource: "",
     cursor: "",
-    sortAndFilterCursor: "",
-    toolsByTagCursor: "",
-    toolsByQueryCursor: "",
-    loadingTools: true,
-    loadingSortAndFilteredTools: false,
-    loadingToolsByTag: false,
-    loadingToolsByQuery: false,
-    totalSortAndFilterCount: 0,
-    totalToolsByTagCount: 0,
-    totalToolsByQueryCount: 0,
     initiallyLoaded: false,
-    sortAndFilterInitiallyLoaded: false,
-    toolsByTagInitiallyLoaded: false,
-    toolsByQueryInitiallyLoaded: false,
-    tagsGeneratedByQuery: [],
-    aiToolsByRelationDictionary: {},
-    toolsByRelationCursor: "",
+    loadingSortAndFilteredTools: false,
+    loadingTools: true,
+    loadingToolsByQuery: false,
     loadingToolsByRelation: false,
+    loadingToolsByTag: false,
+    sortAndFilterCursor: "",
+    sortAndFilterInitiallyLoaded: false,
+    tagsGeneratedByQuery: [],
+    toolAtGlance: {} as AiToolWithRelations,
+    toolsByQueryCursor: "",
+    toolsByQueryInitiallyLoaded: false,
+    toolsByRelationCursor: "",
     toolsByRelationInitiallyLoaded: false,
+    toolsByTagCursor: "",
+    toolsByTagInitiallyLoaded: false,
+    totalDefaultToolsCount: 0,
+    totalSortAndFilterCount: 0,
+    totalToolsByQueryCount: 0,
+    totalToolsByTagCount: 0,
 
     setAiToolsDictionary: (aiTools) =>
         set((state) => {
@@ -210,6 +211,9 @@ const useAiToolStore = create<IAiToolStoreState>((set) => ({
 
     setToolsByRelationCursor: (toolsByRelationCursor) =>
         set((state) => ({ ...state, toolsByRelationCursor })),
+
+    setDefaultTotalToolsCount: (totalDefaultToolsCount) =>
+        set((state) => ({ ...state, totalDefaultToolsCount })),
 }));
 
 export default useAiToolStore;

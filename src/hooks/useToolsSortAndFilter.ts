@@ -1,17 +1,15 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
 
 import { darkModeStyle } from "@/utils/darkModeToast";
 import { getToolsBySortAndFilter } from "@/server/actions/aitools";
 import toast from "react-hot-toast";
 import useAiToolStore from "@/store/slices/aitool";
+import { useSearchParams } from "next/navigation";
 
 const useToolsSortAndFilter = () => {
-    const pathname = usePathname();
     const searchParams = useSearchParams();
 
     const {
-        sortAndFilterInitiallyLoaded,
         setSortAndFilterInitiallyLoaded,
         setSortAndFitlerCursor,
         setAiToolsSortedAndFilteredDictionary,
@@ -29,14 +27,6 @@ const useToolsSortAndFilter = () => {
     }, [searchParams]);
 
     const handleGetToolsBySortAndFilter = useCallback(() => {
-        if (
-            !(
-                pathname.startsWith("/ai_tools") && paramsRecord["price_range"]
-            ) ||
-            sortAndFilterInitiallyLoaded
-        )
-            return;
-
         setLoadingSortAndFilteredTools(true);
 
         getToolsBySortAndFilter(paramsRecord)
@@ -45,10 +35,8 @@ const useToolsSortAndFilter = () => {
                     res.aiTools &&
                         setAiToolsSortedAndFilteredDictionary(res.aiTools);
                     res.nextCursor && setSortAndFitlerCursor(res.nextCursor);
-
-                    if (res.totalCount)
+                    res.totalCount &&
                         setTotalSortAndFilterCount(res.totalCount);
-                    else setTotalSortAndFilterCount(0);
 
                     setSortAndFilterInitiallyLoaded(true);
                 }
@@ -61,13 +49,11 @@ const useToolsSortAndFilter = () => {
             });
     }, [
         paramsRecord,
-        pathname,
         setAiToolsSortedAndFilteredDictionary,
         setSortAndFitlerCursor,
         setLoadingSortAndFilteredTools,
         setTotalSortAndFilterCount,
         setSortAndFilterInitiallyLoaded,
-        sortAndFilterInitiallyLoaded,
     ]);
 
     useEffect(() => {

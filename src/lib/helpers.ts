@@ -1,16 +1,18 @@
 import type { AiToolWithRelations } from "@/types";
-import { ITEMS_PER_PAGE } from "@/constants";
 import { ReadonlyURLSearchParams } from "next/navigation";
 
 export const setNextCursor = (
     aiTools: AiToolWithRelations[],
+    hasMoreItems: boolean = true,
     userId?: string,
-) =>
-    aiTools.length === ITEMS_PER_PAGE
-        ? userId
-            ? `${userId}_${aiTools[aiTools.length - 1].id}`
-            : aiTools[aiTools.length - 1].id
-        : "";
+) => {
+    if (!hasMoreItems) {
+        return "";
+    }
+
+    const lastToolId = aiTools[aiTools.length - 1]?.id;
+    return userId ? `${userId}_${lastToolId}` : lastToolId;
+};
 
 export const capitalizeWordsWithSeparators = (inputString: string) => {
     if (!inputString) return "";
@@ -40,8 +42,7 @@ export const initPathCheckForCorrectToolsRender = (
 ) => {
     const isAiToolsSortAndFilterPath =
         pathname.startsWith("/ai_tools") &&
-        !tagAsString &&
-        !searchParams.toString().includes("query");
+        searchParams.toString().includes("price_range");
 
     const isFavoritesPath = pathname.startsWith("/user/favorites");
 

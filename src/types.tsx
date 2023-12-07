@@ -4,8 +4,6 @@ import type { ImageProps } from "next/image";
 import type { LottieProps } from "react-lottie";
 import { Prisma } from "@prisma/client";
 
-//Types
-
 export type AddFavoriteProps = {
     tool: AiToolWithRelations;
     setFavCount: React.Dispatch<React.SetStateAction<number>>;
@@ -32,7 +30,6 @@ export const aiToolWithPriceInfo = Prisma.validator<Prisma.AiToolDefaultArgs>()(
         },
     },
 );
-// ================================
 
 export interface IAiToolStoreState {
     toolAtGlance: AiToolWithRelations;
@@ -46,6 +43,7 @@ export interface IAiToolStoreState {
     loadingTools: boolean;
     initiallyLoaded: boolean;
     cursor: string;
+    totalDefaultToolsCount: number;
     setAiToolsDictionary: (
         aiTools: AiToolWithRelations[] | Record<string, AiToolWithRelations>,
     ) => void;
@@ -53,6 +51,7 @@ export interface IAiToolStoreState {
     setCursor: (cursor: string) => void;
     setLoadingTools: (isLoading: boolean) => void;
     setInitiallyLoaded: (initiallyLoaded: boolean) => void;
+    setDefaultTotalToolsCount: (count: number) => void;
 
     // SORT AND FILTER TOOLS
     aiToolsSortedAndFilteredDictionary: Record<string, AiToolWithRelations>;

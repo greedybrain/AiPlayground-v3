@@ -62,9 +62,9 @@ export const loadMoreFavorites = async (aiToolId: string) => {
 
         const userId = session.user.id;
 
-        const aiTools = (
+        const aiToolsPlusOne = (
             await db.userFavoriteAiTool.findMany({
-                take: ITEMS_PER_PAGE,
+                take: ITEMS_PER_PAGE + 1,
                 skip: 1,
                 cursor: {
                     userId_aiToolId: {
@@ -83,7 +83,10 @@ export const loadMoreFavorites = async (aiToolId: string) => {
             })
         ).map((tool) => tool.AiTool);
 
-        const nextCursor = setNextCursor(aiTools, userId);
+        const hasMoreItems = aiToolsPlusOne.length > ITEMS_PER_PAGE;
+        const aiTools = aiToolsPlusOne.slice(0, ITEMS_PER_PAGE);
+
+        const nextCursor = setNextCursor(aiTools, hasMoreItems, userId);
 
         return {
             aiTools,

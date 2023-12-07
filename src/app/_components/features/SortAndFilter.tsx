@@ -66,7 +66,7 @@ const SortAndFilter = () => {
         queryParams.append("order", criterions[selectedCriterion][1]);
 
         const path = `/ai_tools?${queryParams.toString()}`;
-        void push(path);
+        push(path);
     };
 
     return (

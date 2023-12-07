@@ -12,6 +12,7 @@ const useInitialToolsFetcher = () => {
         setAiToolsDictionary,
         setCursor,
         setInitiallyLoaded,
+        setDefaultTotalToolsCount,
     } = useAiToolStore((state) => state);
 
     const handleGetInitialTools = useCallback(() => {
@@ -24,6 +25,7 @@ const useInitialToolsFetcher = () => {
                 if (res.success) {
                     res.aiTools && setAiToolsDictionary(res.aiTools);
                     res.nextCursor && setCursor(res.nextCursor);
+                    res.totalCount && setDefaultTotalToolsCount(res.totalCount);
 
                     setInitiallyLoaded(true);
                 }
@@ -38,6 +40,7 @@ const useInitialToolsFetcher = () => {
         initiallyLoaded,
         setAiToolsDictionary,
         setCursor,
+        setDefaultTotalToolsCount,
         setInitiallyLoaded,
         setLoadingTools,
     ]);

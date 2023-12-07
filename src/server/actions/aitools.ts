@@ -7,8 +7,8 @@ import { convertUserQueryToTags } from "./openai";
 import { db } from "../db";
 import { setNextCursor } from "@/lib/helpers";
 
-type SearhParams = Record<string, string>;
-type Params = SearhParams;
+type SearchParams = Record<string, string>;
+type Params = SearchParams;
 
 export const getInitialTools = async () => {
     try {
@@ -20,12 +20,15 @@ export const getInitialTools = async () => {
             take: ITEMS_PER_PAGE,
         });
 
+        const totalCount = await db.aiTool.count();
+
         const nextCursor = setNextCursor(aiTools);
 
         return {
             aiTools,
             nextCursor,
             success: true,
+            totalCount,
         };
     } catch (error) {
         return {
@@ -37,7 +40,7 @@ export const getInitialTools = async () => {
 
 export const loadMoreTools = async (
     cursor: string,
-    searchParams: SearhParams = {},
+    searchParams: SearchParams = {},
     params: Params,
     tags?: string[],
 ) => {
@@ -47,12 +50,20 @@ export const loadMoreTools = async (
             createdAt: "desc",
         };
 
-        if (params["tag"]) {
+        const tag = params["tag"];
+
+        if (tag !== undefined) {
+            // console.log("Tag condition: ", params["tag"]);
             where = buildWhereClauseForTag(params["tag"]);
-        } else if (searchParams["price_range"]) {
+        }
+
+        if (searchParams["price_range"]) {
+            // console.log("Price Range condition", searchParams["price_range"]);
             where = combineWhereClauses(searchParams);
             orderBy = buildAiToolOrderByClause(searchParams);
-        } else if (
+        }
+
+        if (
             tags &&
             tags.length > 0 &&
             (searchParams["query"] || params["name"])
@@ -68,8 +79,8 @@ export const loadMoreTools = async (
             };
         }
 
-        const aiTools = await db.aiTool.findMany({
-            take: ITEMS_PER_PAGE,
+        const aiToolsPlusOne = await db.aiTool.findMany({
+            take: ITEMS_PER_PAGE + 1,
             skip: 1,
             cursor: { id: cursor },
             include: aiToolInclusion,
@@ -77,7 +88,10 @@ export const loadMoreTools = async (
             where,
         });
 
-        const nextCursor = setNextCursor(aiTools);
+        const hasMoreItems = aiToolsPlusOne.length > ITEMS_PER_PAGE;
+        const aiTools = aiToolsPlusOne.slice(0, ITEMS_PER_PAGE);
+
+        const nextCursor = setNextCursor(aiTools, hasMoreItems);
 
         return {
             aiTools,
@@ -86,16 +100,15 @@ export const loadMoreTools = async (
         };
     } catch (error) {
         return {
-            error,
+            message: "An error occurred while loading tools. Try again later.",
             success: false,
         };
     }
 };
 
-export const getToolsBySortAndFilter = async (searchParams: SearhParams) => {
+export const getToolsBySortAndFilter = async (searchParams: SearchParams) => {
     try {
         const combinedWhereClauses = combineWhereClauses(searchParams);
-
         const orderByClauseForAiTool = buildAiToolOrderByClause(searchParams);
 
         const aiTools = await db.aiTool.findMany({
@@ -282,11 +295,17 @@ export const getToolsByRelation = async (tags: string[]) => {
 const buildWhereClauseForTags = (tags: string | null) => {
     if (!tags) return {};
 
-    const tagList = tags
-        .split(",")
-        .map(
-            (tag) => tag.substring(0, 1).toLocaleUpperCase() + tag.substring(1),
-        );
+    const fixCaseSensitivity = (str: string) =>
+        str.substring(0, 1).toLocaleUpperCase() + str.substring(1);
+
+    const tagList = tags.split(",").map((tag) =>
+        tag.includes(" ")
+            ? tag
+                  .split(" ")
+                  .map((t) => fixCaseSensitivity(t))
+                  .join(" ")
+            : fixCaseSensitivity(tag),
+    );
 
     const clause: Prisma.AiToolWhereInput = {
         Tags: {
@@ -373,14 +392,14 @@ const buildWhereClauseForTag = (tag: string) => {
 //     };
 // };
 
-const buildAiToolOrderByClause = (searchParams: SearhParams) => {
+const buildAiToolOrderByClause = (searchParams: SearchParams) => {
     const sort = searchParams["sort"];
     const order = searchParams["order"] as "asc" | "desc";
 
     return orderByMappings[sort]?.[order] || {};
 };
 
-const combineWhereClauses = (searchParams: SearhParams) => {
+const combineWhereClauses = (searchParams: SearchParams) => {
     const tags = searchParams["tags"];
     const priceRange = searchParams["price_range"];
 

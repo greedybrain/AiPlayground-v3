@@ -65,7 +65,7 @@ const Search = () => {
             <Wrapper className={cn("p-2")} onClick={handleSubmit}>
                 <BsArrowUpRightSquare
                     className={cn("bg-primary", "cursor-pointer", "rounded-md")}
-                    size={40}
+                    size={50}
                 />
             </Wrapper>
         </FormField>
