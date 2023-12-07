@@ -51,8 +51,9 @@ export const loadMoreTools = async (
         };
 
         const tag = params["tag"];
+        console.log("params: ", params);
 
-        if (tag !== undefined) {
+        if (tag !== "undefined") {
             // console.log("Tag condition: ", params["tag"]);
             where = buildWhereClauseForTag(params["tag"]);
         }
@@ -78,6 +79,9 @@ export const loadMoreTools = async (
                 },
             };
         }
+
+        console.log("Tags: ", tags);
+        console.log("Where clause: ", where);
 
         const aiToolsPlusOne = await db.aiTool.findMany({
             take: ITEMS_PER_PAGE + 1,
