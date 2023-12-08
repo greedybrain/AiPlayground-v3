@@ -27,6 +27,7 @@ const Tag = ({
                     truncate: shouldTruncate,
                 },
             )}
+            title={shouldTruncate ? tag.tagName : undefined}
         >
             <Link
                 href={`/ai_tools/tags/${capitalizeWordsWithSeparators(
