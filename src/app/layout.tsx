@@ -1,6 +1,7 @@
 import "./globals.css";
+import "tippy.js/dist/tippy.css";
 
-import ClientLayout  from "./clientLayout";
+import ClientLayout from "./clientLayout";
 import DrawerNav from "./_components/ui/DrawerNav";
 import Footer from "./_components/ui/Footer";
 import Header from "./_components/ui/Header";
