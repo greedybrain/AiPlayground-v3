@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useMemo } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 
 import { darkModeStyle } from "@/utils/darkModeToast";
 import { getToolsBySortAndFilter } from "@/server/actions/aitools";
 import toast from "react-hot-toast";
 import useAiToolStore from "@/store/slices/aitool";
-import { useSearchParams } from "next/navigation";
 
 const useToolsSortAndFilter = () => {
     const searchParams = useSearchParams();
+    const pathname = usePathname();
 
     const {
-        sortAndFilterInitiallyLoaded,
         setSortAndFilterInitiallyLoaded,
         setSortAndFitlerCursor,
         setAiToolsSortedAndFilteredDictionary,
@@ -18,7 +18,7 @@ const useToolsSortAndFilter = () => {
         setTotalSortAndFilterCount,
     } = useAiToolStore((state) => state);
 
-    const paramsRecord = useMemo(() => {
+    const searchParamRecords = useMemo(() => {
         let record: Record<string, string> = {};
         searchParams.forEach((value, key) => {
             record[key] = value;
@@ -28,11 +28,17 @@ const useToolsSortAndFilter = () => {
     }, [searchParams]);
 
     const handleGetToolsBySortAndFilter = useCallback(() => {
-        if (sortAndFilterInitiallyLoaded) return;
-
+        if (
+            !(
+                pathname.startsWith("/ai_tools") &&
+                searchParamRecords["price_range"]
+            )
+        ) {
+            return;
+        }
         setLoadingSortAndFilteredTools(true);
 
-        getToolsBySortAndFilter(paramsRecord)
+        getToolsBySortAndFilter(searchParamRecords)
             .then((res) => {
                 if (res.success) {
                     res.aiTools &&
@@ -51,13 +57,13 @@ const useToolsSortAndFilter = () => {
                 setLoadingSortAndFilteredTools(false);
             });
     }, [
-        paramsRecord,
+        pathname,
+        searchParamRecords,
         setAiToolsSortedAndFilteredDictionary,
         setSortAndFitlerCursor,
         setLoadingSortAndFilteredTools,
         setTotalSortAndFilterCount,
         setSortAndFilterInitiallyLoaded,
-        sortAndFilterInitiallyLoaded,
     ]);
 
     useEffect(() => {

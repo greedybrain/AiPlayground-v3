@@ -16,6 +16,7 @@ const useInitialToolsFetcher = () => {
     } = useAiToolStore((state) => state);
 
     const handleGetInitialTools = useCallback(() => {
+        console.log("Has initially loaded 1: ", initiallyLoaded);
         if (initiallyLoaded) return;
 
         setLoadingTools(true);

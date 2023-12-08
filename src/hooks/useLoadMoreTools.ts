@@ -55,8 +55,6 @@ const useLoadMoreTools = () => {
         setToolsByRelationCursor,
     } = useAiToolStore((state) => state);
 
-    console.log("Tags Gen By Query: ", tagsGeneratedByQuery[0]);
-
     // PATHS CHECK
     const {
         isAiToolsForTagPath,

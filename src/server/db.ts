@@ -17,7 +17,7 @@ export const db =
         // In other environments (such as production), log only errors.
         log:
             process.env.NODE_ENV === "development"
-                ? ["error", "warn", "query"]
+                ? ["error", "warn"]
                 : ["error"],
     });
 
