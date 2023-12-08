@@ -16,19 +16,19 @@ import cn from "@/utils/twMerge";
 import useAiToolStore from "@/store/slices/aitool";
 import useToolByNameFetcher from "@/hooks/useToolByNameFetcher";
 
-const ToolAtGlance = () => {
+const ToolInDetail = () => {
     useToolByNameFetcher();
-    const { toolAtGlance, setVideoSource, setToolAtGlance } = useAiToolStore(
+    const { toolInDetail, setVideoSource, setToolInDetail } = useAiToolStore(
         (state) => state,
     );
 
     useEffect(() => {
         return () => {
-            setToolAtGlance({} as AiToolWithRelations);
+            setToolInDetail({} as AiToolWithRelations);
         };
-    }, [setToolAtGlance]);
+    }, [setToolInDetail]);
 
-    if (!toolAtGlance.id) return null;
+    if (!toolInDetail.id) return null;
 
     const {
         affLink,
@@ -42,7 +42,7 @@ const ToolAtGlance = () => {
         Tags,
         videoSource,
         websiteLink,
-    } = toolAtGlance;
+    } = toolInDetail;
 
     const link = affLink ? affLink : websiteLink;
 
@@ -103,7 +103,7 @@ const ToolAtGlance = () => {
                     />
                     <FavCountBookmarkDataGroup
                         count={FavoritedBy?.length}
-                        tool={toolAtGlance}
+                        tool={toolInDetail}
                     />
                 </Wrapper>
                 <p className={cn("leading-relaxed", "mt-8", "text-secondary")}>
@@ -115,7 +115,7 @@ const ToolAtGlance = () => {
                     ))}
                 </ul>
                 <Wrapper className={cn("mt-8")}>
-                    <PriceInfo tool={toolAtGlance} />
+                    <PriceInfo tool={toolInDetail} />
                 </Wrapper>
                 <a
                     href={link}
@@ -164,4 +164,4 @@ const ToolAtGlance = () => {
     );
 };
 
-export default ToolAtGlance;
+export default ToolInDetail;

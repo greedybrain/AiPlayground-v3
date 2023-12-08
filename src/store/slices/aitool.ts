@@ -19,7 +19,7 @@ const useAiToolStore = create<IAiToolStoreState>((set) => ({
     sortAndFilterCursor: "",
     sortAndFilterInitiallyLoaded: false,
     tagsGeneratedByQuery: [],
-    toolAtGlance: {} as AiToolWithRelations,
+    toolInDetail: {} as AiToolWithRelations,
     toolsByQueryCursor: "",
     toolsByQueryInitiallyLoaded: false,
     toolsByRelationCursor: "",
@@ -160,10 +160,10 @@ const useAiToolStore = create<IAiToolStoreState>((set) => ({
             };
         }),
 
-    setToolAtGlance: (toolAtGlance) =>
+    setToolInDetail: (toolInDetail) =>
         set((state) => ({
             ...state,
-            toolAtGlance,
+            toolInDetail,
         })),
 
     setToolsByQueryCursor: (toolsByQueryCursor) =>

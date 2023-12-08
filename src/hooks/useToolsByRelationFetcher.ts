@@ -11,21 +11,21 @@ const useToolsByRelationFetcher = () => {
     const { name } = useParams();
 
     const {
-        toolAtGlance,
+        toolInDetail,
         setLoadingToolsByRelation,
         setAiToolsByRelationDictionary,
         setToolsByRelationCursor,
         setToolsByRelationInitiallyLoaded,
     } = useAiToolStore((state) => state);
 
-    const isAiToolAtGlancePath = pathname.startsWith("/tool") && name;
+    const isAiToolInDetailPath = pathname.startsWith("/tool") && name;
 
     const handleGetToolsByTag = useCallback(() => {
-        if (!isAiToolAtGlancePath || !toolAtGlance.id) return;
+        if (!isAiToolInDetailPath || !toolInDetail.id) return;
 
         setLoadingToolsByRelation(true);
 
-        const tags = toolAtGlance.Tags.map((tag) => tag.tagName);
+        const tags = toolInDetail.Tags.map((tag) => tag.tagName);
 
         getToolsByRelation(tags)
             .then((res) => {
@@ -43,13 +43,13 @@ const useToolsByRelationFetcher = () => {
                 setLoadingToolsByRelation(false);
             });
     }, [
-        isAiToolAtGlancePath,
+        isAiToolInDetailPath,
         setAiToolsByRelationDictionary,
         setLoadingToolsByRelation,
         setToolsByRelationCursor,
         setToolsByRelationInitiallyLoaded,
-        toolAtGlance.id,
-        toolAtGlance.Tags,
+        toolInDetail.id,
+        toolInDetail.Tags,
     ]);
 
     useEffect(() => {

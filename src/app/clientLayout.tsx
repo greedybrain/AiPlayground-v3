@@ -2,7 +2,6 @@
 
 import type { IClientLayout } from "@/types";
 import React from "react";
-// import useAiToolStore from "@/store/slices/aitool";
 import useInitialToolsFetcher from "@/hooks/useInitialToolsFetcher";
 import useToolsByQueryFetcher from "@/hooks/useToolsByQueryFetcher";
 import useToolsByRelationFetcher from "@/hooks/useToolsByRelationFetcher";
@@ -19,9 +18,6 @@ const ClientLayout = ({ children, ...rest }: IClientLayout) => {
     useToolsByTagFetcher();
     useToolsByQueryFetcher();
     useToolsByRelationFetcher();
-
-    // const { totalDefaultToolsCount } = useAiToolStore((state) => state);
-    // console.log(totalDefaultToolsCount);
 
     return <div {...rest}>{children}</div>;
 };

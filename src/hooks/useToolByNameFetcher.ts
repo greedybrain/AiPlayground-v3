@@ -11,7 +11,7 @@ const useToolByNameFetcher = () => {
     const pathname = usePathname();
     const { name } = useParams();
 
-    const { setToolAtGlance } = useAiToolStore((state) => state);
+    const { setToolInDetail } = useAiToolStore((state) => state);
 
     const isToolPath = pathname.startsWith("/tool") && !!name;
 
@@ -25,14 +25,14 @@ const useToolByNameFetcher = () => {
         getToolByName(nameSanitized)
             .then((res) => {
                 if (res.success) {
-                    res.aiTool && setToolAtGlance(res.aiTool);
+                    res.aiTool && setToolInDetail(res.aiTool);
                 }
             })
             .catch((error) => {
                 toast.error(error?.message, { style: darkModeStyle });
             })
             .finally(() => {});
-    }, [isToolPath, name, setToolAtGlance]);
+    }, [isToolPath, name, setToolInDetail]);
 
     useEffect(() => {
         handleGetToolByName();

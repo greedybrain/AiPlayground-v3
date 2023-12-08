@@ -32,8 +32,8 @@ export const aiToolWithPriceInfo = Prisma.validator<Prisma.AiToolDefaultArgs>()(
 );
 
 export interface IAiToolStoreState {
-    toolAtGlance: AiToolWithRelations;
-    setToolAtGlance: (tool: AiToolWithRelations) => void;
+    toolInDetail: AiToolWithRelations;
+    setToolInDetail: (tool: AiToolWithRelations) => void;
 
     currentVideoSource: string;
     setVideoSource: (src: string) => void;

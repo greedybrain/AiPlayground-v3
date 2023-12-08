@@ -42,7 +42,8 @@ export const loadMoreTools = async (
     cursor: string,
     searchParams: SearchParams = {},
     params: Params,
-    tags?: string[],
+    generatedTags?: string[],
+    relationalTags?: string[],
 ) => {
     try {
         let where = {};
@@ -51,37 +52,43 @@ export const loadMoreTools = async (
         };
 
         const tag = params["tag"];
-        console.log("params: ", params);
 
         if (tag !== "undefined") {
-            // console.log("Tag condition: ", params["tag"]);
             where = buildWhereClauseForTag(params["tag"]);
         }
 
         if (searchParams["price_range"]) {
-            // console.log("Price Range condition", searchParams["price_range"]);
             where = combineWhereClauses(searchParams);
             orderBy = buildAiToolOrderByClause(searchParams);
         }
 
         if (
-            tags &&
-            tags.length > 0 &&
+            generatedTags &&
+            generatedTags.length > 0 &&
             (searchParams["query"] || params["name"])
         ) {
             where = {
                 Tags: {
                     some: {
                         tagName: {
-                            in: tags,
+                            in: generatedTags,
                         },
                     },
                 },
             };
         }
 
-        console.log("Tags: ", tags);
-        console.log("Where clause: ", where);
+        if (relationalTags && relationalTags.length > 0) {
+            where = {
+                Tags: {
+                    some: {
+                        tagName: {
+                            in: relationalTags,
+                        },
+                    },
+                },
+            };
+        }
 
         const aiToolsPlusOne = await db.aiTool.findMany({
             take: ITEMS_PER_PAGE + 1,

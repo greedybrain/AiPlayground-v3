@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
 
+import { ITEMS_PER_PAGE } from "@/constants";
 import { darkModeStyle } from "@/utils/darkModeToast";
 import { initPathCheckForCorrectToolsRender } from "@/lib/helpers";
 import { loadMoreFavorites } from "@/server/actions/favorites";
@@ -42,7 +43,7 @@ const useLoadMoreTools = () => {
         toolsByQueryCursor,
         toolsByRelationCursor,
         tagsGeneratedByQuery,
-        toolAtGlance,
+        toolInDetail,
         totalDefaultToolsCount,
         totalSortAndFilterCount,
         totalToolsByQueryCount,
@@ -53,6 +54,8 @@ const useLoadMoreTools = () => {
         setToolsByQueryCursor,
         setToolsByRelationCursor,
     } = useAiToolStore((state) => state);
+
+    console.log("Tags Gen By Query: ", tagsGeneratedByQuery[0]);
 
     // PATHS CHECK
     const {
@@ -69,7 +72,7 @@ const useLoadMoreTools = () => {
     );
     // END OF PATHS CHECK
 
-    const paramsRecord = Object.fromEntries(searchParams.entries());
+    const searchParamRecords = Object.fromEntries(searchParams.entries());
 
     const currentCursor = isFavoritesPath
         ? favoritesCursor
@@ -127,7 +130,7 @@ const useLoadMoreTools = () => {
     const loadMoreItems = useCallback(async () => {
         const { loadedCount, totalCount } = getCurrentCounts();
 
-        if (loadingMoreTools) return;
+        if (loadingMoreTools || totalCount <= ITEMS_PER_PAGE) return;
         if (loadedCount >= totalCount) {
             toast.success(`You've reached the end of the list.`, {
                 style: darkModeStyle,
@@ -141,16 +144,21 @@ const useLoadMoreTools = () => {
 
         const action = isFavoritesPath ? loadMoreFavorites : loadMoreTools;
         try {
+            const toolInDetailTags = toolInDetail.id
+                ? toolInDetail.Tags.map((tag) => tag.tagName)
+                : [];
+
             const res = await action(
                 currentCursor,
-                paramsRecord,
+                searchParamRecords,
                 {
                     tag: decodedTag,
                     name: decodedName,
                 },
-                !!decodedName && toolAtGlance.id
-                    ? toolAtGlance.Tags.map((tag) => tag.tagName)
+                !!decodedName && toolInDetail.id
+                    ? toolInDetailTags
                     : tagsGeneratedByQuery,
+                isAiToolByNamePath ? toolInDetailTags : undefined,
             );
 
             if (res.success) {
@@ -183,7 +191,7 @@ const useLoadMoreTools = () => {
                 res.nextCursor && setCursorFunction(res.nextCursor);
             }
         } catch (error: any) {
-            toast.error(error?.message || "An error occurred");
+            toast.error("An error occurred");
         } finally {
             setLoadingMoreTools(false);
         }
@@ -204,7 +212,7 @@ const useLoadMoreTools = () => {
         isFavoritesPath,
         isAiToolByNamePath,
         loadingMoreTools,
-        paramsRecord,
+        searchParamRecords,
         setCursor,
         setFavoritesCursor,
         setSortAndFitlerCursor,
@@ -212,8 +220,8 @@ const useLoadMoreTools = () => {
         setToolsByRelationCursor,
         setToolsByTagCursor,
         tagsGeneratedByQuery,
-        toolAtGlance.id,
-        toolAtGlance.Tags,
+        toolInDetail.id,
+        toolInDetail.Tags,
     ]);
 
     return { loadingMoreTools, loadMoreItems };
