@@ -10,7 +10,7 @@ const useToolsSortAndFilter = () => {
     const searchParams = useSearchParams();
 
     const {
-        initiallyLoaded,
+        sortAndFilterInitiallyLoaded,
         setSortAndFilterInitiallyLoaded,
         setSortAndFitlerCursor,
         setAiToolsSortedAndFilteredDictionary,
@@ -28,7 +28,7 @@ const useToolsSortAndFilter = () => {
     }, [searchParams]);
 
     const handleGetToolsBySortAndFilter = useCallback(() => {
-        if (initiallyLoaded) return;
+        if (sortAndFilterInitiallyLoaded) return;
 
         setLoadingSortAndFilteredTools(true);
 
@@ -51,13 +51,13 @@ const useToolsSortAndFilter = () => {
                 setLoadingSortAndFilteredTools(false);
             });
     }, [
-        initiallyLoaded,
         paramsRecord,
         setAiToolsSortedAndFilteredDictionary,
         setSortAndFitlerCursor,
         setLoadingSortAndFilteredTools,
         setTotalSortAndFilterCount,
         setSortAndFilterInitiallyLoaded,
+        sortAndFilterInitiallyLoaded,
     ]);
 
     useEffect(() => {

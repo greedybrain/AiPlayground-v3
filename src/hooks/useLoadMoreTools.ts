@@ -136,6 +136,7 @@ const useLoadMoreTools = () => {
                 style: darkModeStyle,
                 duration: 5000,
                 position: "bottom-center",
+                id: "endOfList",
             });
             return;
         }
