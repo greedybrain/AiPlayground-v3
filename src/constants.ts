@@ -62,3 +62,16 @@ export const GPT_INSTRUCTIONS = `
         "tags": ["Marketing", "Copywriting", "Social Media", "Writing Assistant"]
     }
 `;
+
+export const PLACEHOLDERS = [
+    "Best tools for editing videos",
+    "I need assistance for writing pitches for startups",
+    "Tools for social media management and advertising",
+    "Tips for creating digital artwork with evolving patterns and colors",
+    "Enhancing voice recordings for clarity and character in audio projects",
+    "Automating content distribution and engagement online",
+    "Applications for personal health tracking and motivational guidance",
+    "Tools for converting website content into multiple languages efficiently",
+    "Streamlining contract review and document preparation",
+    "Incorporating realistic human movements into digital video projects",
+];

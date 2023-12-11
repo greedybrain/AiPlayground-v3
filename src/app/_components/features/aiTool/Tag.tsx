@@ -13,29 +13,39 @@ const Tag = ({
     shouldTruncate?: boolean;
 }) => {
     return (
-        <Tippy
-            content={
-                shouldTruncate ? (
-                    <span className={cn("text-white")}>{tag.tagName}</span>
-                ) : undefined
-            }
+        <li
+            key={tag.id}
+            className={cn(
+                "bg-white border border-secondary",
+                "cursor-pointer",
+                "font-semibold",
+                // "max-w-[125px]",
+                "px-3 py-2",
+                "rounded-md",
+                "shadow-neobrut1",
+                "text-secondary text-sm",
+                {
+                    truncate: shouldTruncate,
+                },
+            )}
         >
-            <li
-                key={tag.id}
-                className={cn(
-                    "bg-white border border-secondary",
-                    "cursor-pointer",
-                    "font-semibold",
-                    // "max-w-[125px]",
-                    "px-3 py-2",
-                    "rounded-md",
-                    "shadow-neobrut1",
-                    "text-secondary text-sm",
-                    {
-                        truncate: shouldTruncate,
-                    },
-                )}
-            >
+            {shouldTruncate ? (
+                <Tippy
+                    content={
+                        <span className={cn("text-white")}>{tag.tagName}</span>
+                    }
+                >
+                    <Link
+                        href={`/ai_tools/tags/${capitalizeWordsWithSeparators(
+                            tag.tagName,
+                        )}`}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                    >
+                        {tag.tagName}
+                    </Link>
+                </Tippy>
+            ) : (
                 <Link
                     href={`/ai_tools/tags/${capitalizeWordsWithSeparators(
                         tag.tagName,
@@ -45,8 +55,8 @@ const Tag = ({
                 >
                     {tag.tagName}
                 </Link>
-            </li>
-        </Tippy>
+            )}
+        </li>
     );
 };
 
