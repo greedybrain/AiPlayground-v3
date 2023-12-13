@@ -101,6 +101,11 @@ const Search = () => {
                 onFocus={() => setFocus(true)}
                 onBlur={() => setFocus(false)}
                 onChange={(event) => setUserQuery(event.target.value)}
+                onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                        handleSubmit();
+                    }
+                }}
                 value={userQuery}
             />
             <Wrapper className={cn("p-2")} onClick={handleSubmit}>

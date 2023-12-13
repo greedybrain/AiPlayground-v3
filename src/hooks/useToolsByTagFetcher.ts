@@ -22,8 +22,6 @@ const useToolsByTagFetcher = () => {
     const isAiToolsTagsPath = pathname.startsWith("/ai_tools/tags") && tag;
 
     const handleGetToolsByTag = useCallback(() => {
-        if (!isAiToolsTagsPath) return;
-
         const tagAsString = tag as string;
 
         setLoadingToolsByTag(true);
@@ -47,7 +45,6 @@ const useToolsByTagFetcher = () => {
                 setLoadingToolsByTag(false);
             });
     }, [
-        isAiToolsTagsPath,
         setAiToolsByTagDictionary,
         setLoadingToolsByTag,
         setToolsByTagCursor,
@@ -57,8 +54,8 @@ const useToolsByTagFetcher = () => {
     ]);
 
     useEffect(() => {
-        handleGetToolsByTag();
-    }, [handleGetToolsByTag]);
+        if (isAiToolsTagsPath) handleGetToolsByTag();
+    }, [handleGetToolsByTag, isAiToolsTagsPath]);
 };
 
 export default useToolsByTagFetcher;

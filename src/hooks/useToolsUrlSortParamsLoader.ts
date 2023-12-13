@@ -1,12 +1,11 @@
 import type { IToolSortStoreState, SortCriterionOptionsType } from "@/types";
 import { useCallback, useEffect, useMemo } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
 
+import { useSearchParams } from "next/navigation";
 import useTagsStore from "@/store/slices/tags";
 import useToolSortStore from "@/store/slices/tool_sort";
 
 const useToolsUrlSortParamsLoader = () => {
-    const pathname = usePathname();
     const searchParams = useSearchParams();
     const tagsDictionary = useTagsStore((state) => state.tagsDictionary);
 
@@ -26,8 +25,6 @@ const useToolsUrlSortParamsLoader = () => {
 
         return record;
     }, [searchParams]);
-
-    const pathnameStartsWith_ai_tools = pathname.startsWith("/ai_tools");
 
     const handleLoadTagsFromUrl = useCallback(() => {
         const tagsAsString = paramsRecord["tags"];
@@ -74,7 +71,7 @@ const useToolsUrlSortParamsLoader = () => {
     }, [criterions, paramsRecord, setSelectedCriterion]);
 
     useEffect(() => {
-        if (pathnameStartsWith_ai_tools) {
+        if (paramsRecord["price_range"]) {
             handleLoadTagsFromUrl();
             handleLoadPriceRangeFromUrl();
             handleLoadSortAndOrderFromUrl();
@@ -83,7 +80,7 @@ const useToolsUrlSortParamsLoader = () => {
         handleLoadTagsFromUrl,
         handleLoadPriceRangeFromUrl,
         handleLoadSortAndOrderFromUrl,
-        pathnameStartsWith_ai_tools,
+        paramsRecord,
     ]);
 };
 

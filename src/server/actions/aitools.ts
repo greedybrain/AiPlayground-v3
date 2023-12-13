@@ -1,17 +1,46 @@
 "use server";
 
+import { AiToolWithRelations } from "@/types";
 import { ITEMS_PER_PAGE } from "@/constants";
 import { Prisma } from "@prisma/client";
 import { aiToolInclusion } from "@/utils/prismaHelper";
 import { convertUserQueryToTags } from "./openai";
 import { db } from "../db";
+import { redis } from "../redis";
 import { setNextCursor } from "@/lib/helpers";
 
 type SearchParams = Record<string, string>;
 type Params = SearchParams;
+type ToolsFetchReturnType = {
+    aiTools: AiToolWithRelations[];
+    nextCursor: string;
+    success: boolean;
+    totalCount: number;
+};
+
+const GET_DEFAULT_TOOLS_KEY = "defaultTools";
+const GET_TOOLS_BY_SORT_AND_FILTER_KEY = "sortAndFilteredTools";
+const GET_TOOLS_BY_TAG_KEY = "toolsByTag";
+const GET_TOOLS_BY_RELATION_KEY = "toolsByRelation";
 
 export const getInitialTools = async () => {
     try {
+        const cachedData = (await redis.json.get(
+            GET_DEFAULT_TOOLS_KEY,
+        )) as ToolsFetchReturnType | null;
+
+        if (cachedData) {
+            console.log("getInitialTools cache response");
+            const { aiTools, nextCursor, success, totalCount } = cachedData;
+
+            return {
+                aiTools,
+                nextCursor,
+                success,
+                totalCount,
+            };
+        }
+
         const aiTools = await db.aiTool.findMany({
             include: aiToolInclusion,
             orderBy: {
@@ -19,10 +48,18 @@ export const getInitialTools = async () => {
             },
             take: ITEMS_PER_PAGE,
         });
-
         const totalCount = await db.aiTool.count();
-
         const nextCursor = setNextCursor(aiTools);
+
+        const dataToCache = {
+            aiTools,
+            nextCursor,
+            success: true,
+            totalCount,
+        };
+
+        await redis.json.set(GET_DEFAULT_TOOLS_KEY, "$", dataToCache);
+        await redis.expire(GET_DEFAULT_TOOLS_KEY, 3600);
 
         return {
             aiTools,
@@ -119,6 +156,25 @@ export const loadMoreTools = async (
 
 export const getToolsBySortAndFilter = async (searchParams: SearchParams) => {
     try {
+        const cacheKey = `${GET_TOOLS_BY_SORT_AND_FILTER_KEY}:${JSON.stringify(
+            searchParams,
+        )}`;
+        const cachedData = (await redis.json.get(
+            cacheKey,
+        )) as ToolsFetchReturnType | null;
+
+        if (cachedData) {
+            console.log("getToolsBySortAndFilter cache response");
+            const { aiTools, nextCursor, success, totalCount } = cachedData;
+
+            return {
+                aiTools,
+                nextCursor,
+                success,
+                totalCount,
+            };
+        }
+
         const combinedWhereClauses = combineWhereClauses(searchParams);
         const orderByClauseForAiTool = buildAiToolOrderByClause(searchParams);
 
@@ -135,11 +191,21 @@ export const getToolsBySortAndFilter = async (searchParams: SearchParams) => {
 
         const nextCursor = setNextCursor(aiTools);
 
-        return {
+        const dataToCache = {
             aiTools,
-            totalCount,
             nextCursor,
             success: true,
+            totalCount,
+        };
+
+        await redis.json.set(cacheKey, "$", dataToCache);
+        await redis.expire(cacheKey, 86400);
+
+        return {
+            aiTools,
+            nextCursor,
+            success: true,
+            totalCount,
         };
     } catch (error) {
         return {
@@ -151,6 +217,23 @@ export const getToolsBySortAndFilter = async (searchParams: SearchParams) => {
 
 export const getToolsByTag = async (tag: string) => {
     try {
+        const cacheKey = `${GET_TOOLS_BY_TAG_KEY}:${tag}}`;
+        const cachedData = (await redis.json.get(
+            cacheKey,
+        )) as ToolsFetchReturnType | null;
+
+        if (cachedData) {
+            console.log("getToolsByTag cache response");
+            const { aiTools, nextCursor, success, totalCount } = cachedData;
+
+            return {
+                aiTools,
+                nextCursor,
+                success,
+                totalCount,
+            };
+        }
+
         const where = {
             Tags: {
                 some: {
@@ -175,6 +258,16 @@ export const getToolsByTag = async (tag: string) => {
         });
 
         const nextCursor = setNextCursor(aiTools);
+
+        const dataToCache = {
+            aiTools,
+            nextCursor,
+            success: true,
+            totalCount,
+        };
+
+        await redis.json.set(cacheKey, "$", dataToCache);
+        await redis.expire(cacheKey, 86400);
 
         return {
             aiTools,
@@ -268,6 +361,23 @@ export const getToolsByQuery = async (userQuery: string) => {
 
 export const getToolsByRelation = async (tags: string[]) => {
     try {
+        const cacheKey = `${GET_TOOLS_BY_RELATION_KEY}:${JSON.stringify(tags)}`;
+        const cachedData = (await redis.json.get(cacheKey)) as Omit<
+            ToolsFetchReturnType,
+            "totalCount"
+        > | null;
+
+        if (cachedData) {
+            console.log("getToolsByRelation cache response");
+            const { aiTools, nextCursor, success } = cachedData;
+
+            return {
+                aiTools,
+                nextCursor,
+                success,
+            };
+        }
+
         const where = {
             Tags: {
                 some: {
@@ -288,6 +398,15 @@ export const getToolsByRelation = async (tags: string[]) => {
         });
 
         const nextCursor = setNextCursor(aiTools);
+
+        const dataToCache = {
+            aiTools,
+            nextCursor,
+            success: true,
+        };
+
+        await redis.json.set(cacheKey, "$", dataToCache);
+        await redis.expire(cacheKey, 86400);
 
         return {
             aiTools,
@@ -390,18 +509,6 @@ const buildWhereClauseForTag = (tag: string) => {
         },
     };
 };
-
-// const buildWhereClauseForQuery = (generatedTags: string[] | undefined) => {
-//     return {
-//         Tags: {
-//             some: {
-//                 tagName: {
-//                     in: generatedTags,
-//                 },
-//             },
-//         },
-//     };
-// };
 
 const buildAiToolOrderByClause = (searchParams: SearchParams) => {
     const sort = searchParams["sort"];

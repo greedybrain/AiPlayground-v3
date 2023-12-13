@@ -24,8 +24,6 @@ const useToolsByQueryFetcher = () => {
         searchParams.toString().includes("query");
 
     const handleGetToolsByQuery = useCallback(() => {
-        if (!isAiToolsQueryPath) return;
-
         const { query } = Object.fromEntries(searchParams.entries());
 
         setLoadingToolsByQuery(true);
@@ -49,7 +47,6 @@ const useToolsByQueryFetcher = () => {
                     setLoadingToolsByQuery(false);
                 });
     }, [
-        isAiToolsQueryPath,
         searchParams,
         setAiToolsByQueryDictionary,
         setLoadingToolsByQuery,
@@ -60,8 +57,8 @@ const useToolsByQueryFetcher = () => {
     ]);
 
     useEffect(() => {
-        handleGetToolsByQuery();
-    }, [handleGetToolsByQuery]);
+        if (isAiToolsQueryPath) handleGetToolsByQuery();
+    }, [handleGetToolsByQuery, isAiToolsQueryPath]);
 };
 
 export default useToolsByQueryFetcher;

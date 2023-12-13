@@ -21,8 +21,6 @@ const useToolsByRelationFetcher = () => {
     const isAiToolInDetailPath = pathname.startsWith("/tool") && name;
 
     const handleGetToolsByTag = useCallback(() => {
-        if (!isAiToolInDetailPath || !toolInDetail.id) return;
-
         setLoadingToolsByRelation(true);
 
         const tags = toolInDetail.Tags.map((tag) => tag.tagName);
@@ -43,18 +41,17 @@ const useToolsByRelationFetcher = () => {
                 setLoadingToolsByRelation(false);
             });
     }, [
-        isAiToolInDetailPath,
         setAiToolsByRelationDictionary,
         setLoadingToolsByRelation,
         setToolsByRelationCursor,
         setToolsByRelationInitiallyLoaded,
-        toolInDetail.id,
         toolInDetail.Tags,
     ]);
 
     useEffect(() => {
-        handleGetToolsByTag();
-    }, [handleGetToolsByTag]);
+        if (isAiToolInDetailPath && toolInDetail.id)
+            return handleGetToolsByTag();
+    }, [handleGetToolsByTag, isAiToolInDetailPath, toolInDetail.id]);
 };
 
 export default useToolsByRelationFetcher;

@@ -1,4 +1,4 @@
-import AiToolList from "../_components/ui/AiToolList";
+import AiToolsSortedPageContent from "../_components/ui/AiToolsSortedPageContent";
 import type { Metadata } from "next";
 import Wrapper from "../_components/ui/Wrapper";
 import cn from "@/utils/twMerge";
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function AiToolsSortedPage() {
     return (
         <Wrapper className={cn("mx-auto max-w-[1200px]", "px-4")}>
-            <AiToolList />
+            <AiToolsSortedPageContent />
         </Wrapper>
     );
 }

@@ -16,10 +16,6 @@ const useInitialToolsFetcher = () => {
     } = useAiToolStore((state) => state);
 
     const handleGetInitialTools = useCallback(() => {
-        if (initiallyLoaded) return;
-
-        setLoadingTools(true);
-
         getInitialTools()
             .then((res) => {
                 if (res.success) {
@@ -37,7 +33,6 @@ const useInitialToolsFetcher = () => {
                 setLoadingTools(false);
             });
     }, [
-        initiallyLoaded,
         setAiToolsDictionary,
         setCursor,
         setDefaultTotalToolsCount,
@@ -46,8 +41,8 @@ const useInitialToolsFetcher = () => {
     ]);
 
     useEffect(() => {
-        handleGetInitialTools();
-    }, [handleGetInitialTools]);
+        if (!initiallyLoaded) handleGetInitialTools();
+    }, [handleGetInitialTools, initiallyLoaded]);
 };
 
 export default useInitialToolsFetcher;

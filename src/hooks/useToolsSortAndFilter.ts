@@ -28,14 +28,6 @@ const useToolsSortAndFilter = () => {
     }, [searchParams]);
 
     const handleGetToolsBySortAndFilter = useCallback(() => {
-        if (
-            !(
-                pathname.startsWith("/ai_tools") &&
-                searchParamRecords["price_range"]
-            )
-        ) {
-            return;
-        }
         setLoadingSortAndFilteredTools(true);
 
         getToolsBySortAndFilter(searchParamRecords)
@@ -57,7 +49,6 @@ const useToolsSortAndFilter = () => {
                 setLoadingSortAndFilteredTools(false);
             });
     }, [
-        pathname,
         searchParamRecords,
         setAiToolsSortedAndFilteredDictionary,
         setSortAndFitlerCursor,
@@ -67,8 +58,17 @@ const useToolsSortAndFilter = () => {
     ]);
 
     useEffect(() => {
+        if (
+            !(
+                pathname.startsWith("/ai_tools") &&
+                searchParamRecords["price_range"]
+            )
+        ) {
+            return;
+        }
+        console.log("useToolsSortAndFilter called");
         handleGetToolsBySortAndFilter();
-    }, [handleGetToolsBySortAndFilter]);
+    }, [handleGetToolsBySortAndFilter, pathname, searchParamRecords]);
 };
 
 export default useToolsSortAndFilter;
