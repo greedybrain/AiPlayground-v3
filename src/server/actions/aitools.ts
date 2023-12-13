@@ -217,7 +217,7 @@ export const getToolsBySortAndFilter = async (searchParams: SearchParams) => {
 
 export const getToolsByTag = async (tag: string) => {
     try {
-        const cacheKey = `${GET_TOOLS_BY_TAG_KEY}:${tag}}`;
+        const cacheKey = `${GET_TOOLS_BY_TAG_KEY}:${tag}`;
         const cachedData = (await redis.json.get(
             cacheKey,
         )) as ToolsFetchReturnType | null;
