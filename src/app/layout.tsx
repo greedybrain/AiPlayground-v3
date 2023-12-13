@@ -10,6 +10,7 @@ import type { Metadata } from "next";
 import SessionProvider from "../providers/SessionProvider";
 import { Sora } from "next/font/google";
 import SortAndFilter from "./_components/features/SortAndFilter";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "react-hot-toast";
 import Video from "./_components/features/aiTool/Video";
 import Wrapper from "./_components/ui/Wrapper";
@@ -60,6 +61,7 @@ export default async function RootLayout({
                         </ClientLayout>
                     </div>
                 </SessionProvider>
+                <SpeedInsights />
             </body>
         </html>
     );
