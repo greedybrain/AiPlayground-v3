@@ -8,8 +8,14 @@ import { convertUserQueryToTags } from "./openai";
 import { db } from "../db";
 import { redis } from "../redis";
 import { setNextCursor } from "@/lib/helpers";
+import {
+    buildAiToolOrderByClause,
+    buildWhereClauseForTag,
+    combineWhereClauses,
+    type SearchParams,
+} from "../helpers/aitools_actions_helpers";
+import { doRateLimitCheck } from "../helpers/ratelimit_helpers";
 
-type SearchParams = Record<string, string>;
 type Params = SearchParams;
 type ToolsFetchReturnType = {
     aiTools: AiToolWithRelations[];
@@ -17,14 +23,29 @@ type ToolsFetchReturnType = {
     success: boolean;
     totalCount: number;
 };
+type ToolFetchReturnType = {
+    aiTool: AiToolWithRelations;
+    success: boolean;
+};
 
 const GET_DEFAULT_TOOLS_KEY = "defaultTools";
 const GET_TOOLS_BY_SORT_AND_FILTER_KEY = "sortAndFilteredTools";
 const GET_TOOLS_BY_TAG_KEY = "toolsByTag";
 const GET_TOOLS_BY_RELATION_KEY = "toolsByRelation";
+const GET_TOOL_BY_NAME = "toolByName";
 
 export const getInitialTools = async () => {
     try {
+        const { success } = await doRateLimitCheck("getInitialTools");
+
+        if (!success) {
+            return {
+                errored: true,
+                message: "Too many requests.",
+                success,
+            };
+        }
+
         const cachedData = (await redis.json.get(
             GET_DEFAULT_TOOLS_KEY,
         )) as ToolsFetchReturnType | null;
@@ -83,6 +104,16 @@ export const loadMoreTools = async (
     relationalTags?: string[],
 ) => {
     try {
+        const { success } = await doRateLimitCheck("loadMoreTools");
+
+        if (!success) {
+            return {
+                errored: true,
+                message: "Too many requests.",
+                success,
+            };
+        }
+
         let where = {};
         let orderBy: Prisma.AiToolOrderByWithRelationInput = {
             createdAt: "desc",
@@ -156,6 +187,16 @@ export const loadMoreTools = async (
 
 export const getToolsBySortAndFilter = async (searchParams: SearchParams) => {
     try {
+        const { success } = await doRateLimitCheck("getToolsBySortAndFilter");
+
+        if (!success) {
+            return {
+                errored: true,
+                message: "Too many requests.",
+                success,
+            };
+        }
+
         const cacheKey = `${GET_TOOLS_BY_SORT_AND_FILTER_KEY}:${JSON.stringify(
             searchParams,
         )}`;
@@ -217,6 +258,16 @@ export const getToolsBySortAndFilter = async (searchParams: SearchParams) => {
 
 export const getToolsByTag = async (tag: string) => {
     try {
+        const { success } = await doRateLimitCheck("getToolsByTag");
+
+        if (!success) {
+            return {
+                errored: true,
+                message: "Too many requests.",
+                success,
+            };
+        }
+
         const cacheKey = `${GET_TOOLS_BY_TAG_KEY}:${tag}`;
         const cachedData = (await redis.json.get(
             cacheKey,
@@ -285,12 +336,45 @@ export const getToolsByTag = async (tag: string) => {
 
 export const getToolByName = async (name: string) => {
     try {
+        const { success } = await doRateLimitCheck("getToolByName");
+
+        if (!success) {
+            return {
+                errored: true,
+                message: "Too many requests.",
+                success,
+            };
+        }
+
+        const cacheKey = `${GET_TOOL_BY_NAME}:${name}`;
+        const cachedData = (await redis.json.get(
+            cacheKey,
+        )) as ToolFetchReturnType | null;
+
+        if (cachedData) {
+            console.log("getToolsByRelation cache response");
+            const { aiTool, success } = cachedData;
+
+            return {
+                aiTool,
+                success,
+            };
+        }
+
         const aiTool = await db.aiTool.findFirst({
             where: {
                 nameLowercase: name.toLocaleLowerCase(),
             },
             include: aiToolInclusion,
         });
+
+        const dataToCache = {
+            aiTool,
+            success: true,
+        };
+
+        await redis.json.set(cacheKey, "$", dataToCache);
+        await redis.expire(cacheKey, 86400);
 
         return {
             aiTool,
@@ -306,6 +390,16 @@ export const getToolByName = async (name: string) => {
 
 export const getToolsByQuery = async (userQuery: string) => {
     try {
+        const { success } = await doRateLimitCheck("getToolsByQuery");
+
+        if (!success) {
+            return {
+                errored: true,
+                message: "Too many requests.",
+                success,
+            };
+        }
+
         const {
             message,
             success: conversionSuccess,
@@ -361,6 +455,16 @@ export const getToolsByQuery = async (userQuery: string) => {
 
 export const getToolsByRelation = async (tags: string[]) => {
     try {
+        const { success } = await doRateLimitCheck("getToolsByRelation");
+
+        if (!success) {
+            return {
+                errored: true,
+                message: "Too many requests.",
+                success,
+            };
+        }
+
         const cacheKey = `${GET_TOOLS_BY_RELATION_KEY}:${JSON.stringify(tags)}`;
         const cachedData = (await redis.json.get(cacheKey)) as Omit<
             ToolsFetchReturnType,
@@ -419,114 +523,4 @@ export const getToolsByRelation = async (tags: string[]) => {
             success: false,
         };
     }
-};
-
-// Helpers
-const buildWhereClauseForTags = (tags: string | null) => {
-    if (!tags) return {};
-
-    const fixCaseSensitivity = (str: string) =>
-        str.substring(0, 1).toLocaleUpperCase() + str.substring(1);
-
-    const tagList = tags.split(",").map((tag) =>
-        tag.includes(" ")
-            ? tag
-                  .split(" ")
-                  .map((t) => fixCaseSensitivity(t))
-                  .join(" ")
-            : fixCaseSensitivity(tag),
-    );
-
-    const clause: Prisma.AiToolWhereInput = {
-        Tags: {
-            some: {
-                tagName: {
-                    in: tagList,
-                },
-            },
-        },
-    };
-
-    return clause;
-};
-
-const priceRangeMappings: Record<string, Prisma.AiToolWhereInput> = {
-    under25: {
-        PriceInfo: {
-            AND: [{ minPrice: { lt: 25 } }, { maxPrice: { lt: 25 } }],
-        },
-    },
-    "25to75": {
-        PriceInfo: {
-            AND: [{ minPrice: { gte: 25 } }, { maxPrice: { lt: 75 } }],
-        },
-    },
-    "75to100": {
-        PriceInfo: {
-            AND: [{ minPrice: { gte: 75 } }, { maxPrice: { lte: 100 } }],
-        },
-    },
-    over100: {
-        PriceInfo: {
-            OR: [{ minPrice: { gt: 100 } }, { maxPrice: { gt: 100 } }],
-        },
-    },
-};
-
-const buildWhereClauseForPriceRange = (priceRange: string) =>
-    priceRangeMappings[priceRange] || {};
-
-const orderByMappings: Record<
-    string,
-    Record<string, Prisma.AiToolOrderByWithRelationInput>
-> = {
-    date: {
-        asc: { createdAt: "asc" },
-        desc: { createdAt: "desc" },
-    },
-    name: {
-        asc: { name: "asc" },
-        desc: { name: "desc" },
-    },
-    company: {
-        asc: { companyName: "asc" },
-        desc: { companyName: "desc" },
-    },
-    price: {
-        asc: { PriceInfo: { averagePrice: "asc" } },
-        desc: { PriceInfo: { averagePrice: "desc" } },
-    },
-};
-
-const buildWhereClauseForTag = (tag: string) => {
-    return {
-        Tags: {
-            some: {
-                tagName: {
-                    equals: tag,
-                },
-            },
-        },
-    };
-};
-
-const buildAiToolOrderByClause = (searchParams: SearchParams) => {
-    const sort = searchParams["sort"];
-    const order = searchParams["order"] as "asc" | "desc";
-
-    return orderByMappings[sort]?.[order] || {};
-};
-
-const combineWhereClauses = (searchParams: SearchParams) => {
-    const tags = searchParams["tags"];
-    const priceRange = searchParams["price_range"];
-
-    const whereClauseForTags = buildWhereClauseForTags(tags);
-    const whereClauseForPriceRange = buildWhereClauseForPriceRange(
-        priceRange ?? "all",
-    );
-
-    return {
-        AND: [whereClauseForTags, whereClauseForPriceRange],
-    };
 };

@@ -18,6 +18,11 @@ const useInitialToolsFetcher = () => {
     const handleGetInitialTools = useCallback(() => {
         getInitialTools()
             .then((res) => {
+                if (res.errored) {
+                    toast.error(res.message);
+                    return;
+                }
+
                 if (res.success) {
                     res.aiTools && setAiToolsDictionary(res.aiTools);
                     res.nextCursor && setCursor(res.nextCursor);
