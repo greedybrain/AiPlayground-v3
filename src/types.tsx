@@ -261,10 +261,10 @@ export type PriceRangeOptionsType =
 export type SortCriterionOptionsType =
     | "Newly Added"
     | "Oldest"
-    | "Tool Name A-Z"
-    | "Tool Name Z-A"
-    | "Company A-Z"
-    | "Company Z-A"
+    | "Name (asc)"
+    | "Name (desc)"
+    | "Company (asc)"
+    | "Company (desc)"
     | "Lowest Price"
     | "Highest Price";
 
