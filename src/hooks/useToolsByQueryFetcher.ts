@@ -31,6 +31,11 @@ const useToolsByQueryFetcher = () => {
         query &&
             getToolsByQuery(query)
                 .then((res) => {
+                    if (res.errored) {
+                        toast.error(res.message, { style: darkModeStyle });
+                        return;
+                    }
+
                     if (res.success) {
                         setAiToolsByQueryDictionary(res.aiTools!);
                         setToolsByQueryCursor(res.nextCursor!);

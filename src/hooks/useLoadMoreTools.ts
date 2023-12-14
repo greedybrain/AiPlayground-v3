@@ -160,6 +160,11 @@ const useLoadMoreTools = () => {
                 isAiToolByNamePath ? toolInDetailTags : undefined,
             );
 
+            if (res.errored) {
+                toast.error(res.message, { style: darkModeStyle });
+                return;
+            }
+
             if (res.success) {
                 const addFunction = isFavoritesPath
                     ? addBatchToolsToFavoritesDictionary

@@ -27,6 +27,11 @@ const useToolsByRelationFetcher = () => {
 
         getToolsByRelation(tags)
             .then((res) => {
+                if (res.errored) {
+                    toast.error(res.message, { style: darkModeStyle });
+                    return;
+                }
+
                 if (res.success) {
                     res.aiTools && setAiToolsByRelationDictionary(res.aiTools);
                     res.nextCursor && setToolsByRelationCursor(res.nextCursor);

@@ -19,7 +19,7 @@ const useInitialToolsFetcher = () => {
         getInitialTools()
             .then((res) => {
                 if (res.errored) {
-                    toast.error(res.message);
+                    toast.error(res.message, { style: darkModeStyle });
                     return;
                 }
 

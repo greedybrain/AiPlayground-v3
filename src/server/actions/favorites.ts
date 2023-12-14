@@ -3,12 +3,23 @@
 import { ITEMS_PER_PAGE } from "@/constants";
 import { aiToolInclusion } from "@/utils/prismaHelper";
 import { db } from "../db";
+import { doRateLimitCheck } from "../helpers/ratelimit_helpers";
 import { getServerSession } from "next-auth";
 import { options } from "@/app/api/auth/[...nextauth]/options";
 import { setNextCursor } from "@/lib/helpers";
 
 export const getUserFavoriteTools = async () => {
     try {
+        const { success } = await doRateLimitCheck("getUserFavoriteTools");
+
+        if (!success) {
+            return {
+                errored: true,
+                message: "Too many requests.",
+                success,
+            };
+        }
+
         const session = await getServerSession(options);
 
         if (!session) throw new Error("You must be logged in to do that");
@@ -56,6 +67,16 @@ export const getUserFavoriteTools = async () => {
 
 export const loadMoreFavorites = async (aiToolId: string) => {
     try {
+        const { success } = await doRateLimitCheck("loadMoreFavorites");
+
+        if (!success) {
+            return {
+                errored: true,
+                message: "Too many requests.",
+                success,
+            };
+        }
+
         const session = await getServerSession(options);
 
         if (!session) throw new Error("You must be logged in to do that");

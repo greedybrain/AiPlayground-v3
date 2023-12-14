@@ -25,6 +25,11 @@ const useUserFavoriteToolsFetcher = () => {
 
         getUserFavoriteTools()
             .then((res) => {
+                if (res.errored) {
+                    toast.error(res.message, { style: darkModeStyle });
+                    return;
+                }
+
                 if (res.success) {
                     res.aiTools && setFavoritesDictionary(res.aiTools);
                     res.nextCursor && setFavoritesCursor(res.nextCursor);

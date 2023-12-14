@@ -32,6 +32,11 @@ const useToolsSortAndFilter = () => {
 
         getToolsBySortAndFilter(searchParamRecords)
             .then((res) => {
+                if (res.errored) {
+                    toast.error(res.message, { style: darkModeStyle });
+                    return;
+                }
+
                 if (res.success) {
                     res.aiTools &&
                         setAiToolsSortedAndFilteredDictionary(res.aiTools);

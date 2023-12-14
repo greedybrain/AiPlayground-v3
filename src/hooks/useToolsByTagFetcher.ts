@@ -30,6 +30,11 @@ const useToolsByTagFetcher = () => {
 
         getToolsByTag(sanitizedTag)
             .then((res) => {
+                if (res.errored) {
+                    toast.error(res.message, { style: darkModeStyle });
+                    return;
+                }
+
                 if (res.success) {
                     res.aiTools && setAiToolsByTagDictionary(res.aiTools);
                     res.nextCursor && setToolsByTagCursor(res.nextCursor);

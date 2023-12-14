@@ -8,7 +8,9 @@ type RateLimitTarget =
     | "getToolByName"
     | "getToolsByQuery"
     | "getToolsByRelation"
-    | "loadMoreTools";
+    | "loadMoreTools"
+    | "getUserFavoriteTools"
+    | "loadMoreFavorites";
 
 const COMMON_LIMITER = Ratelimit.slidingWindow(60, "1m");
 
@@ -53,6 +55,18 @@ const ratelimit = {
         redis,
         analytics: true,
         prefix: "ratelimit:loadMoreTools",
+        limiter: COMMON_LIMITER,
+    }),
+    getUserFavoriteTools: new Ratelimit({
+        redis,
+        analytics: true,
+        prefix: "ratelimit:getUserFavoriteTools",
+        limiter: COMMON_LIMITER,
+    }),
+    loadMoreFavorites: new Ratelimit({
+        redis,
+        analytics: true,
+        prefix: "ratelimit:loadMoreFavorites",
         limiter: COMMON_LIMITER,
     }),
 };

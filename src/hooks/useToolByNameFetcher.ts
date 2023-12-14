@@ -24,6 +24,11 @@ const useToolByNameFetcher = () => {
 
         getToolByName(nameSanitized)
             .then((res) => {
+                if (res.errored) {
+                    toast.error(res.message, { style: darkModeStyle });
+                    return;
+                }
+
                 if (res.success) {
                     res.aiTool && setToolInDetail(res.aiTool);
                 }
