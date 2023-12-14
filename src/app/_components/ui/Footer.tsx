@@ -1,3 +1,6 @@
+import { FaFacebook, FaReddit, FaSquareXTwitter } from "react-icons/fa6";
+
+import { FaLinkedin } from "react-icons/fa";
 import Link from "next/link";
 import React from "react";
 import Wrapper from "./Wrapper";
@@ -36,92 +39,81 @@ const Footer = () => {
                         )}
                     >
                         {footerNavItems.map((item) => (
-                            <li
-                                key={item.id}
-                                className={cn("font-semibold", "text-sm")}
-                            >
+                            <li key={item.id} className={cn("font-semibold")}>
                                 <Link href={item.path}>{item.name}</Link>
                             </li>
                         ))}
                     </ul>
                 </Wrapper>
-                <p
-                    className={cn(
-                        "border-t-2 border-t-secondary",
-                        "font-semibold",
-                        "md:py-6",
-                        "py-7",
-                        "text-center text-sm",
-                        "w-full",
-                    )}
+                <Wrapper
+                    className={cn("border-t-2 border-t-secondary", "w-full")}
                 >
-                    Copyright &copy; 2023 AiPlayground
-                </p>
+                    <Wrapper
+                        className={cn(
+                            "flex flex-col-reverse",
+                            "gap-10",
+                            "items-center",
+                            "justify-between",
+                            "mx-auto max-w-[1200px] md:flex-row",
+                            "px-4 py-7",
+                            "w-11/12",
+                        )}
+                    >
+                        <p className={cn("font-semibold")}>
+                            Copyright &copy; 2023 AiPlayground
+                        </p>
+                        <ul
+                            className={cn(
+                                "flex flex-col",
+                                "gap-4",
+                                "md:flex-row",
+                            )}
+                        >
+                            <li>
+                                <a
+                                    href="https://www.linkedin.com/company/aiplayground-aipg/"
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                >
+                                    <FaLinkedin fill="#0866c2" size={35} />
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="https://www.reddit.com/user/aiplayground-aipg"
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                >
+                                    <FaReddit fill="#ff4400" size={35} />
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="https://www.facebook.com/itsaipg"
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                >
+                                    <FaFacebook fill="#0766ff" size={35} />
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="https://twitter.com/itsaipg"
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                >
+                                    <FaSquareXTwitter
+                                        fill="#000000"
+                                        size={35}
+                                    />
+                                </a>
+                            </li>
+                        </ul>
+                    </Wrapper>
+                </Wrapper>
             </Wrapper>
         </footer>
     );
-    // return (
-    //     <Wrapper
-    //         className={cn(
-    //             "flex flex-col",
-    //             "gap-8",
-    //             "items-center",
-    //             "mt-20",
-    //             "md:gap-4",
-    //             "w-full",
-    //         )}
-    //     >
-    //         <Wrapper className={cn("mx-auto max-w-[1200px]", "px-4", "w-full")}>
-    //             <Wrapper
-    //                 className={cn(
-    //                     "flex flex-col",
-    //                     "gap-8",
-    //                     "items-center",
-    //                     "max-w-[1200px] md:flex-row md:justify-between mx-auto",
-    //                     "w-full",
-    //                 )}
-    //             >
-    //                 <h1
-    //                     className={cn(
-    //                         "font-extrabold",
-    //                         "text-2xl text-secondary",
-    //                     )}
-    //                 >
-    //                     AiPG
-    //                 </h1>
-    // <ul
-    //     className={cn(
-    //         "flex flex-col",
-    //         "gap-5",
-    //         "items-center",
-    //         "md:flex-row md:gap-10",
-    //     )}
-    // >
-    //     {footerNavItems.map((item) => (
-    //         <li
-    //             key={item.id}
-    //             className={cn("font-semibold", "text-sm")}
-    //         >
-    //             <Link href={item.path}>{item.name}</Link>
-    //         </li>
-    //     ))}
-    // </ul>
-    //             </Wrapper>
-    //         </Wrapper>
-    //         <p
-    //             className={cn(
-    //                 "border-t-2 border-t-secondary",
-    //                 "font-semibold",
-    //                 "md:py-6",
-    //                 "py-7",
-    //                 "text-center text-sm",
-    //                 "w-full",
-    //             )}
-    //         >
-    //             Copyright &copy; 2023 AiPlayground
-    //         </p>
-    //     </Wrapper>
-    // );
 };
 
 export default Footer;
