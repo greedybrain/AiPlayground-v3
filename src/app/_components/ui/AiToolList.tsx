@@ -47,7 +47,7 @@ const AiToolList = () => {
                     loadMoreItems();
                 }
             },
-            { threshold: 0.5 },
+            { threshold: 1.0 },
         );
 
         if (listEndRef.current) {
