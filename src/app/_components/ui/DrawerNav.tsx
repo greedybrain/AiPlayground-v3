@@ -42,7 +42,7 @@ const DrawerNav = () => {
                     "items-center",
                     "justify-between",
                     "mx-auto max-w-[1200px]",
-                    "p-4",
+                    "py-4",
                     "relative",
                     "w-11/12",
                 )}

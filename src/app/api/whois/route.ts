@@ -4,7 +4,10 @@ import { redis } from "@/server/redis";
 
 export async function GET(req: NextRequest) {
     try {
-        const cachedIp = await redis.get<string>("ip");
+        const ipFromHeaders = req.headers.get("x-forwarded-for");
+        const clientIp = ipFromHeaders ?? req.ip;
+
+        const cachedIp = await redis.get<string>(`ip:${clientIp}`);
 
         if (cachedIp) {
             return NextResponse.json({
@@ -13,10 +16,7 @@ export async function GET(req: NextRequest) {
             });
         }
 
-        const ipFromHeaders = req.headers.get("x-forwarded-for");
-        const clientIp = ipFromHeaders ?? req.ip;
-
-        await redis.set(`ip`, clientIp);
+        await redis.set(`ip:${clientIp}`, clientIp);
 
         // Rest of your API logic
         return NextResponse.json({ message: "Retrieved IP", ip: clientIp });

@@ -3,6 +3,7 @@ import { FaFacebook, FaReddit, FaSquareXTwitter } from "react-icons/fa6";
 import { FaLinkedin } from "react-icons/fa";
 import Link from "next/link";
 import React from "react";
+import { SiLinktree } from "react-icons/si";
 import Wrapper from "./Wrapper";
 import cn from "@/utils/twMerge";
 import footerNavItems from "@/data/footerNavItems";
@@ -106,6 +107,21 @@ const Footer = () => {
                                         fill="#000000"
                                         size={35}
                                     />
+                                </a>
+                            </li>
+                            <li
+                                className={cn(
+                                    "bg-[#40df5c]",
+                                    "p-2",
+                                    "rounded-md",
+                                )}
+                            >
+                                <a
+                                    href="https://linktr.ee/itsaipg"
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                >
+                                    <SiLinktree fill="#000000" size={20} />
                                 </a>
                             </li>
                         </ul>

@@ -1,4 +1,5 @@
 import { Ratelimit } from "@upstash/ratelimit";
+import fetch from "node-fetch";
 import { redis } from "../redis";
 
 type RateLimitTarget =
@@ -72,11 +73,23 @@ const ratelimit = {
 };
 
 export const doRateLimitCheck = async (target: RateLimitTarget) => {
-    const ip = await redis.get<string>("ip");
+    try {
+        const url =
+            process.env.NODE_ENV === "production"
+                ? "https://www.aipg.io/api/whois"
+                : "http://localhost:3000/api/whois";
+        const response = await fetch(url);
+        const data = (await response.json()) as { message: string; ip: string };
 
-    const { success } = await ratelimit[target].limit(ip!);
+        const { success } = await ratelimit[target].limit(data.ip);
 
-    return {
-        success,
-    };
+        return {
+            success,
+        };
+    } catch (error) {
+        return {
+            message: "Something went wrong checking rate-limit",
+            success: false,
+        };
+    }
 };

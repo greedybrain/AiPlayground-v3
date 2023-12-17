@@ -78,7 +78,7 @@ const Search = () => {
                 "rounded-lg",
                 "shadow-neobrut2",
                 "transition-all",
-                "w-11/12",
+                "w-full",
                 {
                     "border-[3px] shadow-neobrut3": isFocused,
                 },

@@ -16,9 +16,9 @@ const Header = () => {
             <Wrapper
                 className={cn(
                     "mx-auto max-w-[1200px]",
-                    "py-4",
+                    "p-4",
                     "relative",
-                    "w-11/12",
+                    "w-full",
                 )}
             >
                 <SignInModal />
