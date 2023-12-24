@@ -6,6 +6,11 @@ import { redirect } from "next/navigation";
 
 export const redirectIfUnauthorized = async () => {
     const session = await getServerSession(options);
+    const isAdmin = session?.user.isAdmin;
 
-    if (!session) redirect("/?authRequired=true");
+    if (session) {
+        if (!isAdmin) redirect("/");
+    } else {
+        redirect("/?authRequired=true");
+    }
 };

@@ -214,7 +214,7 @@ export type NameProps = {
 };
 
 export interface INavItem {
-    name: "Home" | "Favorites" | "Logout";
+    name: "Home" | "Favorites" | "Logout" | "Admin";
     path: "/" | "/user/favorites";
 }
 

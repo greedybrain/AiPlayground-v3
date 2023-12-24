@@ -19,6 +19,7 @@ declare module "next-auth" {
     interface Session extends DefaultSession {
         user: DefaultSession["user"] & {
             id: string;
+            isAdmin: boolean;
             // ...other properties
             // role: UserRole;
         };
@@ -62,13 +63,26 @@ export const options: NextAuthOptions = {
             }
             return true;
         },
-        session: ({ session, user }) => ({
-            ...session,
-            user: {
-                ...session.user,
-                id: user.id,
-            },
-        }),
+        session: async ({ session, user }) => {
+            if (user) {
+                const dbUser = await db.user.findUnique({
+                    where: { id: user.id },
+                });
+
+                if (dbUser) {
+                    return {
+                        ...session,
+                        user: {
+                            ...session.user,
+                            id: user.id,
+                            isAdmin: dbUser.isAdmin,
+                        },
+                    };
+                }
+            }
+
+            return session;
+        },
     },
     adapter: PrismaAdapter(db),
     providers: [

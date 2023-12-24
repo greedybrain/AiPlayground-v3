@@ -23,6 +23,7 @@ const HeroContent = () => {
         "/tool",
         "/ai_tools/tags",
         "/ai_tools",
+        "/admin",
     ];
 
     const shouldBeHidden = hiddenPaths.some((path) => {

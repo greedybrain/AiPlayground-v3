@@ -15,6 +15,10 @@ const items = [
         path: "/user/favorites",
     },
     {
+        name: "Admin",
+        path: "/admin",
+    },
+    {
         name: "Logout",
         path: "/",
     },

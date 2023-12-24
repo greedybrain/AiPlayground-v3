@@ -9,7 +9,9 @@ const NavItem = (item: INavItem) => {
     const { data: session } = useSession();
 
     const shouldHideItem =
-        !session && ["Favorites", "Logout"].some((val) => val === item.name);
+        (!session &&
+            ["Favorites", "Logout"].some((val) => val === item.name)) ||
+        (item.name === "Admin" && !session?.user.isAdmin);
 
     const renderItem = () => {
         if (shouldHideItem) {
