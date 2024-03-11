@@ -1,6 +1,7 @@
 import "./globals.css";
 import "tippy.js/dist/tippy.css";
 
+import { Analytics } from "@vercel/analytics/react";
 import ClientLayout from "./clientLayout";
 import DrawerNav from "./_components/ui/DrawerNav";
 import Footer from "./_components/ui/Footer";
@@ -55,6 +56,7 @@ export default async function RootLayout({
                             <Wrapper className={cn("flex-1")}>
                                 <main>
                                     <GoogleAnalytics gaId="G-9GQPWB84JS" />
+                                    <Analytics />
                                     <HeroContent />
                                     {children}
                                 </main>
