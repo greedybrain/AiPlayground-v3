@@ -4,6 +4,7 @@ import "tippy.js/dist/tippy.css";
 import ClientLayout from "./clientLayout";
 import DrawerNav from "./_components/ui/DrawerNav";
 import Footer from "./_components/ui/Footer";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import Header from "./_components/ui/Header";
 import HeroContent from "./_components/ui/HeroContent";
 import type { Metadata } from "next";
@@ -53,6 +54,7 @@ export default async function RootLayout({
                             <SortAndFilter />
                             <Wrapper className={cn("flex-1")}>
                                 <main>
+                                    <GoogleAnalytics gaId="G-9GQPWB84JS" />
                                     <HeroContent />
                                     {children}
                                 </main>
