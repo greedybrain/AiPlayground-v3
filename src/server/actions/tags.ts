@@ -13,7 +13,6 @@ export const getTags = async () => {
         );
 
         if (cachedData) {
-            console.log("getTags cache response");
             const tags = cachedData;
 
             return {
