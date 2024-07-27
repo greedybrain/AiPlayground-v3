@@ -33,39 +33,51 @@ export default async function RootLayout({
     children: React.ReactNode;
 }) {
     const session = await getServerSession(options);
+    const underConstruction = true;
 
     return (
         <html lang="en">
             <body className={cn(inter.className, "relative")}>
-                <SessionProvider session={session}>
-                    <div
-                        className={cn(
-                            "bg-gradient-to-b from-[#F9FFEF] to-[#D9F7FE]",
-                            "flex flex-col",
-                            "min-h-screen min-w-[360px] w-[11/12]",
-                        )}
-                    >
-                        <Video />
-                        <ClientLayout
-                            className={cn("flex flex-col", "min-h-screen")}
-                        >
-                            <Toaster />
-                            <Header />
-                            <DrawerNav />
-                            <SortAndFilter />
-                            <Wrapper className={cn("flex-1")}>
-                                <main>
-                                    <GoogleAnalytics gaId="G-9GQPWB84JS" />
-                                    <Analytics />
-                                    <HeroContent />
-                                    {children}
-                                </main>
-                            </Wrapper>
-                            <Footer />
-                        </ClientLayout>
+                {!underConstruction ? (
+                    <>
+                        <SessionProvider session={session}>
+                            <div
+                                className={cn(
+                                    "bg-gradient-to-b from-[#F9FFEF] to-[#D9F7FE]",
+                                    "flex flex-col",
+                                    "min-h-screen min-w-[360px] w-[11/12]",
+                                )}
+                            >
+                                <Video />
+                                <ClientLayout
+                                    className={cn(
+                                        "flex flex-col",
+                                        "min-h-screen",
+                                    )}
+                                >
+                                    <Toaster />
+                                    <Header />
+                                    <DrawerNav />
+                                    <SortAndFilter />
+                                    <Wrapper className={cn("flex-1")}>
+                                        <main>
+                                            <GoogleAnalytics gaId="G-9GQPWB84JS" />
+                                            <Analytics />
+                                            <HeroContent />
+                                            {children}
+                                        </main>
+                                    </Wrapper>
+                                    <Footer />
+                                </ClientLayout>
+                            </div>
+                        </SessionProvider>
+                        <SpeedInsights />
+                    </>
+                ) : (
+                    <div className="flex items-center justify-center min-h-screen w-full text-5xl font-bold">
+                        Under reconstruction
                     </div>
-                </SessionProvider>
-                <SpeedInsights />
+                )}
             </body>
         </html>
     );
